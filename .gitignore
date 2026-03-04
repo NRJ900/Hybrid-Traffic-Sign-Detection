@@ -22,7 +22,10 @@ __pycache__/
 Dataset/
 *.pt
 *.pth
-Model/
+
+#others
+Model/*
+Results/*
 
 # OS generated files
 .DS_Store
