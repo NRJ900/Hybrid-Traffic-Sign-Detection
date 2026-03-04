@@ -1,0 +1,1352 @@
+Table of Contents
+Proposed Title
+3
+Proposed Title Description 
+4
+Proposed Abstract 
+5
+Real Time Use Cases 
+7
+Existing Algorithms 
+8
+Existing System Disadvantages 
+9
+Literature Survey 
+10
+Problem Statement 
+23
+Objectives
+24
+Motivation
+25
+Proposed System 
+26
+Proposed System Advantages 
+27
+Proposed Algorithms 
+28
+Proposed Algorithm Advantages 
+29
+Project Modules 
+30
+Hardware Requirements 
+34
+Software Requirements 
+35
+Architecture
+36
+Conclusion
+38
+Future Work 
+39
+References
+40
+
+Abbreviation
+YOLO = You Only Look Once
+R-CNN = Region Based Convolutional Neural Network
+FPN = Feature Pyramid Network
+ViT = Vision Transformer
+mAP = mean Average Precision
+IoU = Intersection over Union
+RPN = Region Proposal Network
+NMS = Non Maximum Suppression
+SDCD = Self-Driving Cars Dataset
+ADAS = Advanced Driver Assistance Systems
+
+Proposed Title
+A Learning and Verifying Traffic Sign Detection Using Adaptive Fusion Intelligence
+Framework
+
+Proposed Title Description
+A: Indicates a novel unified system distinct from conventional standalone
+detectors.
+Learning: Represents deep feature extraction through convolutional and
+transformer-based representation learning.
+and: Highlights the integration of complementary detection and verification
+stages.
+Verifying: Emphasizes semantic confirmation and false-positive rejection
+through transformer-based arbitration.
+Traffic Sign Detection: Defines the specific safety-critical computer vision
+problem addressed.
+Using: Specifies methodological implementation rather than theoretical
+proposal.
+Adaptive Fusion Intelligence Framework: Denotes our custom hybrid ensemble
+architecture that adaptively merges multi-detector outputs with transformer-
+guided decision refinement.
+
+Proposed Abstract
+Traffic  sign  detection  is  a  fundamental  perception  component  in  intelligent
+transportation and autonomous driving systems. Reliable recognition of regulatory,
+warning, and informational signs ensures safe navigation and compliance with
+road  laws.  Modern  object  detection  algorithms  have  significantly  improved
+performance  through  deep  convolutional  architectures  and  attention-based
+transformers. One-stage detectors offer real-time inference capabilities, while two-
+stage detectors provide improved localization precision. Additionally, transformer-
+based  classifiers  capture  global  contextual  dependencies,  enabling  strong
+semantic discrimination. Despite these advances, challenges remain in detecting
+small, distant, occluded, and overlapping traffic signs under complex illumination
+and environmental conditions. The presence of cluttered urban scenes and visually
+similar backgrounds further complicates accurate classification. Therefore, robust
+hybrid  approaches  that  combine  complementary  detection  paradigms  have
+emerged as promising solutions for safety-critical road scene understanding tasks.
+The base paper proposes a hybrid detection framework combining You Only Look
+Once version 12, Faster Region Based Convolutional Neural Network implemented
+through  Detectron2,  and  a  Vision  Transformer  verifier.  While  the  ensemble
+achieves strong mean Average Precision improvements, several limitations persist.
+First,  parallel  execution  of  multiple  heavy  models  significantly  increases
+computational complexity and reduces inference speed. Second, the verification
+stage is sensitive to distorted or misaligned cropped regions, leading to occasional
+misclassification when bounding boxes are inaccurate. Third, evaluation is limited
+to  a  dataset  with  only  fifteen  traffic  sign  classes,  restricting  generalization
+capability.  Fourth,  fixed  fusion  rules  based  on  threshold  heuristics  may  not
+dynamically  adapt  to  varying  scene  complexity.  Finally,  the  architecture  lacks
+uncertainty modeling and adaptive confidence calibration, which are essential for
+real-world safety-critical deployment.
+To  overcome  these  drawbacks,  we  propose  an  Adaptive  Fusion  Intelligence
+Framework  that  integrates  a  Hybrid  Multi-Scale  Convolutional  Transformer
+Detector with a Dynamic Confidence Arbitration Module. Our system combines
+
+Efficient  Vision  Transformer  augmented  One-Stage  Detection  and  Enhanced
+Region Proposal Two-Stage Detection within a unified feature-sharing backbone to
+reduce  redundancy.  Instead  of  fixed  IoU-based  fusion,  we  introduce  Adaptive
+Probabilistic  Overlapping  Box  Aggregation  using  Bayesian  Confidence
+Recalibration. A Transformer-Guided Contextual Verification Network with Multi-
+Scale Attention Refinement replaces static verification rules. Compared to the base
+framework and state-of-the-art You Only Look Once version 12 and Faster Region
+Based  Convolutional  Neural  Network  detectors,  our  hybrid  reduces  redundant
+computations through shared feature extraction while improving robustness for
+small and occluded signs. The proposed architecture achieves improved detection
+reliability, adaptive decision fusion, and computational efficiency suitable for CPU-
+based deployment environments.
+
+Real Time Use Cases
+In intelligent transportation ecosystems, reliable traffic sign detection is crucial for
+Advanced Driver Assistance Systems and autonomous vehicle navigation. Real-
+time  detection  ensures  compliance  with  speed  regulations,  stop  commands,
+pedestrian  warnings,  and  lane  restrictions.  Our  Adaptive  Fusion  Intelligence
+Framework  enhances  detection  robustness  under  complex  lighting  conditions,
+heavy  traffic,  fog,  and  partial  occlusion.  The  adaptive  probabilistic  fusion
+mechanism minimizes false alarms that could trigger abrupt braking or incorrect
+maneuvering. By reducing missed detections of small distant signs, the framework
+increases  situational  awareness  and  road  safety.  Municipal  transportation
+authorities  can  deploy  the  system  for  automated  traffic  sign  inventory
+management, digital mapping validation, and road compliance monitoring without
+requiring specialized hardware accelerators.
+Beyond autonomous vehicles, the framework can support smart city surveillance,
+driver  training  simulators,  and  digital  twin  transportation  modeling.  Insurance
+companies can integrate the detection module into dashcam analytics to assess
+driving  behavior  compliance.  Navigation  service  providers  can  update  map
+databases automatically by identifying newly installed or damaged signs. Road
+maintenance  departments  can  detect  deteriorated  or  occluded  signage  for
+proactive replacement. Since the architecture is optimized for efficient feature
+sharing  and  adaptive  decision  fusion,  it  can  operate  entirely  on  laptop  CPU
+environments, enabling scalable deployment in academic research labs, traffic
+management centers, and software-only simulation platforms without dependency
+on high-end GPUs.
+
+Existing Algorithms
+You Only Look Once version 12
+Faster Region Based Convolutional Neural Network
+Vision Transformer
+
+Existing System Disadvantages
+High Computational Overhead: Running independent one-stage and two-stage
+detectors in parallel significantly increases inference latency and memory
+usage, making deployment difficult in resource-constrained environments
+without specialized hardware acceleration.
+Fixed Fusion Thresholds: Static Intersection over Union and confidence
+thresholds do not adapt dynamically to scene complexity, leading to
+suboptimal merging decisions when objects are densely packed or partially
+occluded.
+Crop Sensitivity in Verification: The Vision Transformer verification stage relies
+on resized bounding box crops, which may distort extremely small or
+misaligned regions and introduce classification errors.
+Limited Generalization Scope: Evaluation on a dataset containing only fifteen
+traffic sign classes restricts validation across diverse global traffic
+environments with hundreds of sign variations.
+Lack of Uncertainty Modeling: The system does not incorporate probabilistic
+confidence calibration or uncertainty estimation, which is essential for safety-
+critical decision support systems in autonomous driving.
+
+Literature Survey
+
+Literature Survey 1 
+Detection to Framework for Traffic Signs Using a
+Hybrid Approach
+Authors: Issam Dagher, Antonio Makary
+Published Date: 05-Sep-2025
+DOI: 10.1109/ACCESS.2025.3606754
+Literature
+Traffic sign detection plays a crucial role in autonomous driving systems, yet
+remains a challenging task due to factors such as small object sizes, distant
+placements,  complex  lighting  conditions,  and  frequent  occlusions.  This  paper
+introduces a hybrid detection framework that integrates three advanced models:
+YOLOv12 (a high-speed one-stage detector), Detectron2 with Faster R-CNN (a
+precision-focused two-stage detector), and a Vision Transformer (ViT) classifier.
+This research system is trained and evaluated on the Self-Driving Cars Dataset
+(SDCD)  from  Roboflow,  featuring  15  traffic  sign  classes  in  complex  urban
+environments.  Detection  outputs  are  merged  using  an  overlapping  box  fusion
+strategy, and a ViT module further verifies predictions, resolves conflicting labels,
+and filters false positives. Experimental results demonstrate that the hybrid system
+achieves  97.7%  mAP@50  and  88.3%  mAP@50:95,  outperforming  individual
+detectors and previous hybrid approaches. Qualitative analysis shows substantial
+improvements in detecting small, occluded, and overlapping signs. The inclusion of
+ViT reduces both false positives and missed detections. While this ensemble
+increases  computational  complexity,  it  offers  enhanced  robustness,  making  it
+suitable  for  safety-critical  applications.  Future  work  will  focus  on  improving
+inference efficiency and validating the system on larger and more diverse datasets
+such as TT100K to assess generalization performance across wider environments.
+
+Literature Survey 2 
+CR-YOLOv8: Multiscale Object Detection in Traffic
+Sign Images
+Authors: Lu Jia Zhang, Jian Jun Fang, Yan Xia Liu, Hai Feng Le, Zhi Qiang Rao, Jia
+Xiang Zhao
+Published Date: 25-Dec-2023
+DOI: 10.1109/ACCESS.2023.3347352
+Literature
+Due to the large-scale changes of different forms of traffic signs and the rapid
+speed of vehicles, the detection accuracy and real-time performance of general
+object detectors are greatly challenged, especially the detection accuracy of small
+objects. In order to solve this problem, a multi-scale traffic sign detection model
+CR-YOLOv8 is proposed based on the latest YOLOv8. In the feature extraction
+stage, the attention module is introduced to enhance the channel and spatial
+features, so that the network can learn the key information of the small objects
+more easily. The RFB module is introduced in the feature fusion stage, which
+improves the feature diversity with less computational overhead and improves the
+network’s ability to detect multi-scale objects. By improving the loss function to
+enable the model to effectively balance multi-scale objectives during training, the
+model  generalization  ability  is  improved.The  experimental  results  on  TT100k
+dataset show that compared with the baseline network, the average detection
+accuracy of the improved method is increased by 2.3 %, and the detection accuracy
+of small objects is increased by 1.6 %, which effectively reduces the detection
+accuracy gap among different scales.
+
+Literature Survey 3 
+UCN-YOLOv5: Traffic Sign Object Detection Algorithm
+Based on Deep Learning
+Authors: Peilin Liu, Zhaoyang Xie, Taijun Li
+Published Date: 05-Oct-2023
+DOI: 10.1109/ACCESS.2023.3322371
+Literature
+Traffic  sign  detection  plays  an  important  role  in  traffic  safety  and  traffic
+management. In view of the complex and changeable environment and detection
+accuracy of traffic sign detection, this paper proposes UCN-YOLOv5 model based
+on the framework of YOLOv5.This model first replaces a new backbone network,
+which uses the core module RSU of U2Net to enhance the feature extraction of the
+network. Then, ConvNeXt-V2 is integrated, and the C3 module of its Block and
+YOLOv5 network is used to construct the C3_CN2 structure. The utilization of this
+research  lightweight  receptive  field  attention  module  LPFAConv  in  the  Head
+Section represents a potential enhancement for the extraction of receptive field
+features. Finally, for small targets in traffic signs, Normalized Wasserstein Distance
+(NWD), which is insensitive to targets of different scales, is added to calculate the
+position loss function to replace the IoU metric to a certain extent, which further
+improves the detection ability of this research model for traffic signs. Experiments
+on  the  TT100K  dataset  show  that  UCNYOLOv5  has  excellent  detection
+performance. Compared with the baseline model (Y0Lov5s, YOLOV5m, YOLOV5l), it
+improves the Map.5 index by 5.9 %, 4.9 % and 4.6 %; in the Map.5:.95 index, it is 4.4
+%,  3.5  %  and  2.8  %  better.  Moreover,  the  enhanced  algorithm  demonstrated
+favorable performance on the LISA and CCTSDB2021 traffic sign datasets. This
+research has important value for the accurate detection of traffic sign detection,
+and has guiding significance for in-depth research in related fields.
+
+Literature Survey 4 
+An Implementation of Real-Time Traffic Signs and
+Road Objects Detection Based on Mobile GPU
+Platforms
+Authors: Emin Güney, Cüneyt Bayilmis, Batuhan Çakan
+Published Date: 16-Aug-2022
+DOI: 10.1109/ACCESS.2022.3198954
+Literature
+Thanks  to  the  rapid  development  of  computer  vision  and  deep  learning
+technologies, advanced driver assistance systems (ADAS) have recently become
+widespread. These systems aim to increase driving safety and reduce the number
+of traffic accidents. Modern cars usually have ADAS systems integrated into their
+electronics, but other vehicles do not have such an integrated system. This paper
+presents a portable and image-based ADAS system for real-time detection of
+traffic  signs,  vehicles,  and  pedestrians.  To  realize  real-time  detection,  the
+developed system uses the YOLO v5 algorithm. This single-stage detector is very
+popular as it has high detection speed and accuracy. The model was trained on the
+Tesla P100 graphics processing unit (GPU) with nearly 2500 images and 8 hours
+using GTSRB and study-specific dataset to analyze the developed system. Then,
+the implementation metrics (F1 score, P, R, PR curves) were calculated to evaluate
+the training and testing performances of the model. In addition, the model was
+compared in low-power, high-performance embedded platforms and in a computer
+to measure the real-time performance. The comparison results for (Jetson Xavier
+AGX, Jetson Xavier Nx, Jetson Nano and Test PC) achieved a speed of (43.59,
+23.17,  6.4  and  3.41)  frames  per  second  for  real-time  detection,  respectively.
+Considering  the  excellent  accuracy  and  high  speed,  this  study  will  guide
+researchers in demonstrating the efficiency and suitability of real-time road object
+detection with YOLO v5 on mobile platforms.
+
+Literature Survey 5 
+A Traffic-Sign Detection Algorithm Based on Improved
+Sparse R-cnn
+Authors: Jinghao Cao, Junju Zhang, Xin Jin
+Published Date: 01-Sep-2021
+DOI: 10.1109/ACCESS.2021.3109606
+Literature
+Automatic traffic-sign detection is a hot topic in computer vision and one of the
+critical technologies of intelligent transportation. The Transformer structure has
+recently  become  a  research  hotspot  due  to  its  excellent  performance.  This
+research  hope  to  apply  this  structure  to  the  design  of  traffic  sign  detection
+algorithms. Therefore, this research make some improvements to Sparse R-cnn, a
+neural network model inspired by Transformer. Sparse R-cnn is a novel model, and
+its core idea is to replace hundreds of thousands of candidate anchors in the RPN
+network with a small set of proposal boxes. The experiments in this research paper
+proved  that  the  performance  of  the  Sparse  R-cnn  model  is  better  than  other
+existing general object detection models. Based on the original Sparse R-cnn
+inspiration, an improved Sparse R-cnn model is proposed. First, a novel backbone
+for the task of traffic-sign detection is proposed. Multi-scale fusion structure is the
+essential  method  of  improving  the  algorithm  for  small  target  detection,  so
+improving the multi-scale capability of the backbone is a required method for
+designing traffic sign detection. So, this research made further improvements to
+the  existing  backbone  ResNest.  This  research  enhanced  the  multi-scale
+representation ability of the backbone by constructing hierarchical residual-like
+connections within each single radix block in the original ResNest. This research
+call the improved backbone Res2Nest. The novel backbone proposed by us shows
+better  performance  without  introducing  excessive  computational  costs  to  the
+model. In addition, the attention mechanism is also an effective method to improve
+the  detection  of  traffic  signs,  so  this  research  set  up  a  branch  network  for
+
+recalibrating the channel feature response adaptively through the Global Average
+Pooling (GAP) operation and a fully connected layer. It can also be seen as the
+implementation of the cross-channel self-attention mechanism. After experiments
+by TT100K dataset, this research method would attain a better accuracy and
+robustness.
+
+Literature Survey 6 
+Implementation of a Real-Time Analysis Simulation
+System for Traffic Signal Control Algorithms to
+Reduce Vehicle Exhaust Emissions and Improve
+Traffic Flow
+Authors: Hyeokgyu Kwon, Jinhwan Jang, Jongsik Kim, Dongmahn Seo, Soobin
+Jeon
+Published Date: 28-Apr-2025
+DOI: 10.1109/ACCESS.2025.3564623
+Literature
+Traffic signal control (TSC) is a part of intelligent transportation systems to reduce
+traffic congestion and emissions. Recently, dynamic traffic signal control systems
+using  artificial  intelligence  and  reinforcement  learning  have  been  studied  to
+achieve these goals. Although verification of TSC algorithms is ideally performed in
+a real environment, traffic simulation tools are widely used due to safety issues.
+However, existing simulation tools have limitations in real-time result analysis,
+making it difficult to analyze the strengths and weaknesses of each algorithm
+according to each traffic situation. In this paper, this research propose RTASS, a
+real-time analysis simulation system for TSC algorithms that enables real-time
+comparison and result analysis, to improve the problems of such a simulation
+environments.  To  validate  RTASS,  this  research  experiment  using  actual
+intersection  data.  As  a  result  of  comparing  the  traffic  volume  of  the  actual
+intersection data and the simulation, this research confirmed that the error rate
+was maintained within 2% on average. In addition, this research evaluate the
+performance  of  each  TSC  algorithm  using  RTASS  and  verify  the  results  by
+comparing two existing methods and two proposed TSC methods. This research
+confirmed that real-time comparison of traffic analysis and algorithms is possible
+using this research simulation system.
+
+Literature Survey 7 
+AI-Integrated Traffic Information System: A
+Synergistic Approach of Physics Informed Neural
+Network and GPT-4 for Traffic Estimation and Real-
+Time Assistance
+Authors: Tewodros Syum Gebre, Leila Beni, Eden Tsehaye Wasehun, Freda Elikem
+Dorbu
+Published Date: 08-May-2024
+DOI: 10.1109/ACCESS.2024.3399094
+Literature
+Traffic management systems have primarily relied on live traffic sensors for real-
+time traffic guidance. However, this dependence often results in uneven service
+delivery due to the limited scope of sensor coverage or potential sensor failures.
+This  research  introduces  a  novel  approach  to  overcome  this  limitation  by
+synergistically integrating a Physics-Informed Neural Network-based Traffic State
+Estimator (PINN-TSE) with a powerful Natural Language Processing model, GPT-4.
+The purpose of this integration is to provide a seamless and personalized user
+experience, while ensuring accurate traffic density prediction even in areas with
+limited data availability. The innovative PINN-TSE model was developed and tested,
+demonstrating a promising level of precision with a Mean Absolute Error of less
+than fthis research vehicles per mile in traffic density estimation. This performance
+underlines the model’s ability to provide dependable traffic information, even in
+regions where conventional traffic sensors may be sparsely distributed or data
+communication is likely to be interrupted. Furthermore, the incorporation of GPT-4
+enhances user interactions by understanding and responding to inquiries in a
+manner akin to human conversation. This not only provides precise traffic updates
+but also interprets user intentions for a tailored experience. The results of this
+research  showcase  an  AI-integrated  traffic  guidance  system  that  outperforms
+
+traditional methods in terms of traffic estimation, personalization, and reliability.
+While the study primarily focuses on a single road segment, the methodology
+shows promising potential for expansion to network-level traffic guidance, offering
+even greater accuracy and usability. This paves the way for a smarter and more
+efficient approach to traffic management in the future.
+
+Literature Survey 8 
+Heterogeneous Traffic Flow Detection Using CAV-
+Based Sensor With I-GAIN
+Authors: Bowen Gong, Zhipeng Xu, Ciyun Lin, Dayong Wu
+Published Date: 31-Mar-2023
+DOI: 10.1109/ACCESS.2023.3263720
+Literature
+This study proposes using connected automatic vehicles (CAVs) as traffic flow
+detectors  to  collect  and  exchange  traffic  flow  data  for  heterogeneous  traffic
+management and control. This research method includes the construction of a
+mathematical  matrix  to  represent  the  status  of  the  road  section,  the  use  of
+unsupervised machine learning to evaluate traffic data, and an improved generative
+adversarial imputation net (GAIN) to evaluate and impute missing traffic data.
+Next-generation simulation (NGSIM) data are used to verify the accuracy and
+robustness of this research method. One of the primary innovations of this study is
+the use of GAIN, a deep learning framework based on generative adversarial
+networks (GANs), to impute missing traffic data. GAIN has been shown to be more
+robust and stable when handling incomplete heterogeneous data than existing
+imputation methods. Additionally, this study contributes to the field by proposing
+the use of CAVs as sensors to detect mixed traffic flow, which could lead to more
+efficient  and  accurate  traffic  management  and  control.  Experimental  results
+demonstrate that this research method outperforms existing imputation methods,
+with  a  normalized  root  mean  squared  error  and  symmetric  mean  absolute
+percentage  error  of  less  than  0.2/0.3  and  0.08/0.13  in  I-80  and  Lankershim
+Boulevard, respectively. The findings of this study have important implications for
+the  development  and  implementation  of  connected  and  automated  vehicle
+technologies in the field of transportation.
+
+Literature Survey 9 
+Short-Term Traffic Speed Forecasting Using a Deep
+Learning Method Based on Multitemporal Traffic Flow
+Volume
+Authors: Yacong Gao, Chenjing Zhou, Jian Rong, Yi Wang, Siyang Liu
+Published Date: 01-Aug-2022
+DOI: 10.1109/ACCESS.2022.3195353
+Literature
+Accurate  traffic  speed  forecasting  not  only  can  help  traffic  management
+departments make better judgments and improve the efficacy of road monitoring
+but also can help drivers plan their driving routes and arrive safely and smoothly at
+their destination. This paper focuses on the lack of traffic speed data and proposes
+a method for traffic speed forecasting based on the multitemporal traffic flow
+volume of the previous and later moment states. First, according to traffic flow
+volume data, the different traffic patterns of previous and later moment states
+were extracted. Second, the performance of five forecasting models, namely, long
+short-term memory (LSTM), backpropagation (BP), classification and regression
+trees, k-nearest neighbor, and support vector regression, were compared. Finally,
+the model with the best prediction results was used to conduct sensitivity analysis
+experiments for different traffic patterns. Through a real-data case study, this
+research  found  that  the  LSTM  model  has  the  highest  prediction  accuracy
+compared to other models in both time and space. This traffic pattern “previous = 3
+and later = 3” can forecast traffic speed more accurately, and its forecasting ability
+is robust across a range of scenarios.
+
+Literature Survey 10 
+Modeling and Simulating Urban Traffic Flow Mixed
+With Regular and Connected Vehicles
+Authors: Zuping Cao, Lili Lu, Chen Chen, Xu Chen
+Published Date: 08-Jan-2021
+DOI: 10.1109/ACCESS.2021.3050199
+Literature
+In the upcoming decades, connected vehicles will join regular vehicles on the road,
+and  the  characteristics  of  traffic  flows  will  change  accordingly.  To  better
+understand  mixed  traffic  flow  (regular  vehicles  and  connected  vehicles)
+characteristics, a generic car-following modeling framework for this new mixed
+traffic flow on an urban road under a connected vehicle environment is proposed in
+this paper. Considering a vehicle’s speed, which is affected by the speed of the
+preceding vehicle, an improved intelligent driver model (IDM) is used as the car-
+following model for regular vehicles. An extended cooperative adaptive cruise
+control (CACC) based on the nonlinear dynamic headway strategy was established
+as  the  car-following  model  for  connected  vehicles.  The  fundamental  diagram
+model of mixed traffic flow under different market penetration rates of CACC
+vehicles is investigated, and the traffic flow operation mechanism of connected
+vehicles is analyzed to improve the capacity. In addition, simulation experiments on
+urban  roads  are  designed  to  evaluate  the  queue  time  and  length  of  vehicles
+passing through congested sections under different market penetration rates of
+CACC vehicles. The results demonstrate that this research model can effectively
+describe the current situation of traffic flow on urban roads under different market
+penetration rates of CACC vehicles. The increase in the market penetration rates of
+CACC vehicles can significantly improve the traffic flow efficiency. When CACC
+vehicles reach 100% of all vehicles, the queue length on congested roads can be
+shortened by 64.6%, and the total travel time on congested roads can be reduced
+by 48.3%.
+
+Problem Statement
+Traffic sign detection systems must simultaneously achieve high recall for small
+and  distant  objects,  precise  localization  under  occlusion,  and  minimal  false
+positive  rates  in  cluttered  urban  scenes.  Existing  single-stage  and  two-stage
+detectors  exhibit  inherent  trade-offs  between  speed  and  precision.  Hybrid
+ensemble methods improve accuracy but introduce computational redundancy,
+rigid fusion policies, and sensitivity to crop distortions. Furthermore, the absence
+of adaptive probabilistic reasoning limits the robustness of final predictions under
+uncertain  visual  conditions.  A  unified,  computationally  efficient,  and  adaptive
+detection framework is therefore required to ensure reliable performance without
+excessive processing overhead.
+The  primary  challenge  lies  in  designing  a  hybrid  architecture  that  leverages
+complementary detection strengths while minimizing redundant computation. The
+system must dynamically adapt fusion decisions based on contextual confidence
+and incorporate semantic verification that remains robust for extremely small
+traffic  signs.  Additionally,  the  architecture  must  operate  purely  in  software
+environments  suitable  for  CPU  execution,  avoiding  hardware  dependency.
+Therefore, a novel Adaptive Fusion Intelligence Framework is needed to address
+computational efficiency, adaptive confidence recalibration, and robust multi-scale
+verification in a unified detection pipeline.
+
+Objectives
+Adaptive Fusion Modeling: To design a probabilistic overlapping box
+aggregation mechanism that dynamically recalibrates confidence scores based
+on contextual uncertainty and multi-detector agreement.
+Hybrid Feature Sharing: To develop a shared backbone architecture that
+minimizes redundant convolutional computation across one-stage and two-
+stage detection pipelines.
+Robust Verification Strategy: To implement a multi-scale transformer-based
+verification module capable of handling distorted, small, and partially occluded
+sign crops.
+Computational Optimization: To reduce inference latency while maintaining
+high mean Average Precision suitable for CPU-only execution environments.
+Generalization Enhancement: To validate the proposed framework across
+diverse datasets with expanded traffic sign categories and varying
+environmental conditions.
+
+Motivation
+Autonomous transportation systems demand highly reliable perception modules
+capable of interpreting road semantics accurately under challenging environmental
+conditions. False detections or missed traffic signs may lead to severe safety
+consequences. Although deep learning has significantly improved object detection,
+inherent architectural trade-offs limit consistent performance. Hybrid detection
+approaches  demonstrate  promising  accuracy  improvements  but  introduce
+computational  inefficiencies  and  static  decision  policies.  Addressing  these
+limitations  requires  integrating  adaptive  probabilistic  reasoning  with  efficient
+shared feature extraction to enhance robustness without excessive overhead.
+Furthermore, real-world deployment necessitates systems that generalize beyond
+limited datasets and operate effectively in pure software environments. Current
+verification mechanisms lack contextual uncertainty awareness and may fail under
+crop distortions. By introducing adaptive confidence arbitration and transformer-
+guided contextual refinement within a unified architecture, we can improve both
+reliability and scalability. This motivates us to do this project.
+
+Proposed System
+The proposed Adaptive Fusion Intelligence Framework consists of a Shared Multi-
+Scale  Feature  Extraction  Backbone  followed  by  Dual  Detection  Heads  and  a
+Transformer-Based  Contextual  Arbitration  Module.  The  backbone  integrates
+Efficient Convolutional Blocks with Lightweight Attention Modules to capture both
+local spatial patterns and global contextual cues. Feature maps are simultaneously
+routed to a One-Stage Dense Prediction Head and a Two-Stage Region Proposal
+Head,  eliminating  redundant  feature  computation.  This  shared  representation
+significantly  reduces  computational  overhead  compared  to  independently
+executed detectors. The detection heads produce bounding boxes and confidence
+distributions that are forwarded to the Adaptive Probabilistic Fusion Engine.
+The  Adaptive  Probabilistic  Fusion  Engine  applies  Bayesian  Confidence
+Recalibration to merge overlapping predictions using dynamically learned weights
+rather  than  fixed  thresholds.  A  Multi-Scale  Transformer  Verification  Network
+evaluates  fused  proposals  using  contextual  embeddings  and  uncertainty
+estimation.  Instead  of  rigid  suppression  rules,  predictions  are  refined  through
+entropy-based decision control. The final output is generated after probabilistic
+consensus  validation.  The  architecture  operates  entirely  in  software  and  is
+optimized for CPU execution, ensuring scalability and deployment flexibility.
+
+Proposed System Advantages
+Reduced Redundancy: Shared backbone architecture eliminates duplicate
+feature extraction, lowering computational complexity compared to parallel
+independent detector execution.
+Adaptive Decision Fusion: Bayesian confidence recalibration dynamically
+adjusts fusion weights based on contextual agreement and uncertainty levels.
+Enhanced Small Object Robustness: Multi-scale transformer verification
+improves discrimination of tiny and occluded traffic signs.
+Improved Generalization: Context-aware probabilistic reasoning enables
+consistent performance across diverse environmental conditions.
+CPU-Compatible Deployment: Optimized lightweight modules allow execution
+on standard laptop CPUs without requiring dedicated hardware accelerators.
+
+Proposed Algorithms
+You Only Look Once version 12
+Faster Region Based Convolutional Neural Network
+Adaptive Probabilistic Fusion with Transformer Verification Algorithm
+
+Proposed Algorithm Advantages
+You Only Look Once version 12: Advantages
+High-speed dense prediction suitable for real-time applications
+Strong multi-scale detection capability
+Efficient end-to-end training pipeline
+Faster Region Based Convolutional Neural Network: Advantages
+High localization precision
+Robust proposal-based detection for occluded objects
+Improved bounding box refinement accuracy
+Adaptive Probabilistic Fusion with Transformer Verification Algorithm:
+Advantages 
+Dynamic confidence recalibration
+Reduced false positive rates
+Improved robustness under uncertainty
+
+Project Modules
+
+Module 1
+Shared Multi-Scale Feature Extraction Module
+The Shared Multi-Scale Feature Extraction Module forms the foundation of the
+proposed architecture. It integrates lightweight convolutional layers with attention-
+enhanced feature refinement blocks to capture hierarchical spatial information.
+Unlike traditional independent detectors that compute redundant feature maps
+separately, this module generates unified representations for both dense prediction
+and region proposal heads. Multi-scale pyramidal aggregation ensures effective
+representation  of  small  and  distant  traffic  signs.  Attention-guided  feature
+recalibration  enhances  contextual  awareness  without  introducing  heavy
+computational  burden.  The  module  is  optimized  for  CPU  execution  through
+depthwise separable convolutions and parameter-efficient design strategies. By
+sharing  features  across  detection  branches,  it  significantly  reduces  memory
+footprint and inference latency while preserving detection quality.
+
+Module 2
+Adaptive Probabilistic Fusion Engine
+The  Adaptive  Probabilistic  Fusion  Engine  merges  predictions  from  multiple
+detection  heads  using  Bayesian  confidence  aggregation.  Instead  of  fixed
+Intersection over Union thresholds, this module dynamically computes weighted
+confidence  scores  based  on  agreement  probability  and  uncertainty  entropy.
+Overlapping bounding boxes are fused through probabilistic coordinate averaging,
+and conflicting labels are resolved using contextual consensus evaluation. The
+module  includes  uncertainty  estimation  logic  that  reduces  overconfident
+misclassifications.  By  leveraging  statistical  recalibration  rather  than  heuristic
+suppression, it enhances detection reliability in cluttered urban scenes. The engine
+operates  efficiently  within  a  pure  software  pipeline  and  ensures  stable
+performance without reliance on hardware accelerators.
+
+Module 3
+Transformer-Based Contextual Verification Module
+The  Transformer-Based  Contextual  Verification  Module  performs  semantic
+validation  of  fused  detection  proposals.  It  employs  multi-head  self-attention
+mechanisms  to  capture  global  contextual  dependencies  within  cropped  sign
+regions. Multi-scale embedding refinement preserves structural information for
+extremely  small  traffic  signs.  Entropy-based  confidence  analysis  determines
+whether  predictions  should  be  confirmed,  relabeled,  or  suppressed.  Unlike
+conventional  static  classifiers,  this  module  integrates  contextual  embedding
+feedback into the fusion engine for iterative refinement. Lightweight transformer
+blocks ensure CPU compatibility while maintaining high semantic discrimination
+capability.  This  module  significantly  reduces  false  positives  and  enhances
+robustness under occlusion and visual distortion.
+
+Hardware Requirements
+Processor: Minimum i5 Dual Core
+Ethernet connection (LAN) OR a wireless adapter (Wi-Fi)
+Hard Drive: Minimum 200 GB; Recommended 200 GB or more
+Memory (RAM): Minimum 16 GB; Recommended 32 GB or above
+Networkcard to connect Internet
+
+Software Requirements
+Python For AI/ML/DL Programming
+Jupyter Notebook or PyCharm IDE (Integrated Development Environment) for
+Development.
+PyTorch or TensorFlow for Deep Learning Coding.
+Sklearn for Machine Learning/Feature Extraction/Evaluation Metrics Coding.
+Numpy for implementing Linear Algebra.
+Plotly for Data Visualization (For Graphs).
+Matplotlib for Data Visualization (For Graphs).
+Seaborn for Data Visualization (For Graphs).
+Pandas for dealing with Tabular Data.
+Cv2 for Image Processing Coding.
+Pillow for Image Processing Coding.
+
+Architecture
+
+
+Conclusion
+This project introduced an Adaptive Fusion Intelligence Framework designed to
+enhance traffic sign detection accuracy, robustness, and computational efficiency.
+By integrating shared multi-scale feature extraction with adaptive probabilistic
+fusion  and  transformer-based  contextual  verification,  the  proposed  system
+addresses limitations found in traditional hybrid ensemble detectors. Unlike static
+fusion  methods,  the  adaptive  Bayesian  recalibration  mechanism  dynamically
+adjusts  decision  weights  according  to  contextual  agreement  and  uncertainty
+levels.  Experimental  insights  indicate  improved  detection  reliability  for  small,
+distant, and occluded traffic signs while reducing redundant computations. The
+architecture  maintains  strong  mean  Average  Precision  performance  while
+remaining suitable for CPU-based execution environments. Overall, the framework
+establishes a balanced trade-off between detection precision, robustness, and
+computational efficiency, making it well-suited for intelligent transportation and
+safety-critical applications.
+
+Future Work
+Future  research  will  focus  on  extending  the  Adaptive  Fusion  Intelligence
+Framework to larger and more diverse traffic sign datasets with expanded class
+distributions  and  environmental  variability.  Incorporating  self-supervised
+pretraining  strategies  may  further  improve  generalization  to  unseen  sign
+categories.  Additionally,  integrating  lightweight  uncertainty  quantification
+mechanisms  and  entropy-aware  rejection  strategies  can  enhance  safety
+assurance.  Exploring  knowledge  distillation  techniques  may  reduce  model
+complexity  while  preserving  hybrid  performance.  Adaptive  curriculum  learning
+strategies can improve robustness under extreme weather and low-light scenarios.
+Further optimization for edge computing environments and embedded software
+platforms  will  enable  scalable  deployment  across  intelligent  transportation
+infrastructures. Continuous evaluation and benchmarking against evolving state-
+of-the-art  detection  architectures  will  ensure  long-term  competitiveness  and
+reliability.
+
+References
+
+References
+1. I. Dagher and A. Makary, "Detection to Framework for Traffic Signs Using a
+Hybrid Approach," in IEEE Access, vol. 13, pp. 160619-160626, 2025, doi:
+10.1109/ACCESS.2025.3606754.
+2. L. J. Zhang, J. J. Fang, Y. X. Liu, H. Feng Le, Z. Q. Rao and J. X. Zhao, "CR-
+YOLOv8: Multiscale Object Detection in Traffic Sign Images," in IEEE Access,
+vol. 12, pp. 219-228, 2024, doi: 10.1109/ACCESS.2023.3347352.
+3. P. Liu, Z. Xie and T. Li, "UCN-YOLOv5: Traffic Sign Object Detection Algorithm
+Based on Deep Learning," in IEEE Access, vol. 11, pp. 110039-110050, 2023,
+doi: 10.1109/ACCESS.2023.3322371.
+4. E. Güney, C. Bayilmiş and B. Çakan, "An Implementation of Real-Time Traffic
+Signs and Road Objects Detection Based on Mobile GPU Platforms," in IEEE
+Access, vol. 10, pp. 86191-86203, 2022, doi: 10.1109/ACCESS.
+2022.3198954.
+5. J. Cao, J. Zhang and X. Jin, "A Traffic-Sign Detection Algorithm Based on
+Improved Sparse R-cnn," in IEEE Access, vol. 9, pp. 122774-122788, 2021,
+doi: 10.1109/ACCESS.2021.3109606.
+6. H. Kwon, J. Jang, J. Kim, D. Seo and S. Jeon, "Implementation of a Real-
+Time Analysis Simulation System for Traffic Signal Control Algorithms to
+Reduce Vehicle Exhaust Emissions and Improve Traffic Flow," in IEEE
+Access, vol. 13, pp. 76109-76120, 2025, doi: 10.1109/ACCESS.
+2025.3564623.
+7. T. Syum Gebre, L. Beni, E. Tsehaye Wasehun and F. Elikem Dorbu, "AI-
+Integrated Traffic Information System: A Synergistic Approach of Physics
+Informed Neural Network and GPT-4 for Traffic Estimation and Real-Time
+Assistance," in IEEE Access, vol. 12, pp. 65869-65882, 2024, doi: 10.1109/
+ACCESS.2024.3399094.
+8. B. Gong, Z. Xu, C. Lin and D. Wu, "Heterogeneous Traffic Flow Detection
+Using CAV-Based Sensor With I-GAIN," in IEEE Access, vol. 11, pp.
+32616-32627, 2023, doi: 10.1109/ACCESS.2023.3263720.
+
+9. Y. Gao, C. Zhou, J. Rong, Y. Wang and S. Liu, "Short-Term Traffic Speed
+Forecasting Using a Deep Learning Method Based on Multitemporal Traffic
+Flow Volume," in IEEE Access, vol. 10, pp. 82384-82395, 2022, doi: 10.1109/
+ACCESS.2022.3195353.
+10. Z. Cao, L. Lu, C. Chen and X. Chen, "Modeling and Simulating Urban Traffic
+Flow Mixed With Regular and Connected Vehicles," in IEEE Access, vol. 9,
+pp. 10392-10399, 2021, doi: 10.1109/ACCESS.2021.3050199.
+11. R. Jiang, Q. Wu, and Z. Zhu, “Full velocity difference model for a car-
+following theory,” Phys. Rev. E, Stat. Phys. Plasmas Fluids Relat.
+Interdiscip. Top., vol. 64, no. 1, Jun. 2001, Art. no. 017101.
+12. Q. Li, W. Wu, L. Lu, Z. Li, A. Ahmad, and G. Jeon, “Infrared and visible
+images fusion by using sparse representation and guided filter,” J. Intell.
+Transp. Syst., vol. 24, no. 3, pp. 254–263, May 2020.
+13. J. Jeon, S. Lee, and H. Choe, “Beyond ChatGPT: A conceptual framework
+and systematic review of speech-recognition chatbots for language
+learning,” Comput. Educ., vol. 206, Dec. 2023, Art. no. 104898.
+14. G. Gomes, A. May, and R. Horowitz, “Congested freeway microsimulation
+model using VISSIM,” Transp. Res. Record: J. Transp. Res. Board, vol. 1876,
+no. 1, pp. 71–81, Jan. 2004.
+15. Office of Operations, Active Traffic Management, Federal Highway
+Administration, Aug. 2023.
+16. Ministry of Land. Infrastructure and Transport. Vehicle Registration Status.
+Accessed: Apr. 2, 2025. [Online]. Available: http://www.index.go.kr/unity/
+potal/main/EachDtlPageDetail.do?idx_cd=1257.
+17. M. Lin, Q. Chen, and S. Yan, “Network in network,” 2013, arXiv:1312.4400.
+[Online]. Available: http://arxiv.org/abs/1312.4400.
+18. H. Liu, C. Lin, B. Gong, and D. Wu, “Extending the detection range for low-
+channel roadside LiDAR by static background construction,” IEEE Trans.
+Geosci. Remote Sens., vol. 60, 2022, Art. no. 5702412, doi: 10.1109/TGRS.
+2022.3155634.
+
+19. R. E. Haas, S. Bhattacharjee, and D. P. Möller, “Advanced driver assistance
+systems,” in Smart Technologies. Singapore : Springer, 2020, pp. 345–371.
+20. J. I. Ge, S. S. Avedisov, C. R. He, W. B. Qin, M. Sadeghpour, and G. Orosz,
+“Experimental validation of connected automated vehicle design among
+human-driven vehicles,” Transp. Res. C, Emerg. Technol., vol. 91, pp. 335–
+352, Jun. 2018.
+21. Y. Zhu, C. Zhang, D. Zhou, X. Wang, X. Bai, and W. Liu, “Traffic sign detection
+and recognition using fully convolutional network guided proposals,”
+Neurocomputing, vol. 214, pp. 758–766, Nov. 2016.
+22. I. Loumiotis, K. Demestichas, E. Adamopoulou, P. Kosmides, V.
+Asthenopoulos, and E. Sykas, “Road traffic prediction using artificial neural
+networks,” in Proc. South-Eastern Eur. Design Autom., Comput. Eng.,
+Comput. Netw. Soc. Media Conf., Sep. 2018, pp. 1–5.
+23. M. Treiber, A. Hennecke, and D. Helbing, “On the stability of traffic flow
+(report–I),” Transp. Res. B, Methodol., vol. 2, nos. 2–3, pp. 1805–1824,
+2000.
+24. M. S. Rahman and M. Abdel-Aty, “Longitudinal safety evaluation of
+connected vehicles’ platooning on expressways,” Accident Anal.
+Prevention, vol. 117, pp. 381–391, Aug. 2018.
+25. E. I. Vlahogianni, M. G. Karlaftis, and J. C. Golias, “Short-term traffic
+forecasting: Where we are and where we’re going,” Transp. Res. C, Emerg.
+Technol., vol. 43, pp. 3–19, Jun. 2014, doi: 10.1016/j.trc.2014.01.005.
+26. M. C. Kus, M. Gokmen, and S. Etaner-Uyar, “Traffic sign recognition using
+scale invariant feature transform and color classification,” in Proc. 23rd Int.
+Symp. Comput. Inf. Sci., Oct. 2008, pp. 1–6.
+27. X. Sun, P. Wu, and S. C. H. Hoi, “Face detection using deep learning: An
+improved faster RCNN approach,” Neurocomputing, vol. 299, pp. 42–50,
+Jul. 2018.
+28. F. Zaklouta and B. Stanciulescu, “Real-time traffic sign recognition in three
+stages,” Robot. Auto. Syst., vol. 62, no. 1, pp. 16–24, 2014.
+
+29. W. Farhat, S. Sghaier, H. Faiedh, and C. Souani, “Design of efficient
+embedded system for road sign recognition,” J. Ambient Intell. Humanized
+Comput., vol. 10, no. 2, pp. 491–507, Feb. 2019.
+30. The Roadway Safety Problem, U.S. Dept. Transporation DOT, Oct. 2023.
+31. A. Kesting, M. Treiber, and D. Helbing, “Enhanced intelligent driver model to
+access the impact of driving strategies on traffic capacity,” Phil. Trans. Roy.
+Soc. A, Math., Phys. Eng. Sci., vol. 368, no. 1928, pp. 4585–4605, Oct.
+2010.
+32. H. Xu, Y. Wang, and K. Ding, “V2X-ViT: Vehicle-to-everything cooperative
+perception with vision transformers,” in Proc. Eur. Conf. Comput. Vis.
+(ECCV), 2022.
+33. Y. Saadna and A. Behloul, “An overview of traffic sign detection and
+classification methods,” Int. J. Multimedia Inf. Retr., vol. 6, no. 3, pp. 193–
+210, Sep. 2017.
+34. C. Lin, G. Sun, L. Tan, B. Gong, and D. Wu, “Mobile LiDAR deployment
+optimization: Towards application for pavement marking stained and Worn
+detection,” IEEE Sensors J., vol. 22, no. 4, pp. 3270–3280, Feb. 2022, doi:
+10.1109/JSEN.2022.3140312.
+35. P. Sun, R. Zhang, Y. Jiang, T. Kong, C. Xu, W. Zhan, M. Tomizuka, L. Li, Z.
+Yuan, C. Wang, and P. Luo, “Sparse R-CNN: End-to-end object detection
+with learnable proposals,” in Proc. IEEE/CVF Conf. Comput. Vis. Pattern
+Recognit. (CVPR), Jun. 2021, pp. 14449–14458.
+36. J. I. Ge and G. Orosz, “Dynamics of connected vehicle systems with
+delayed acceleration feedback,” Transp. Res. C, Emerg. Technol., vol. 46,
+pp. 46–64, Sep. 2014.
+37. Q. Zhao, T. Sheng, Y. Wang, Z. Tang, Y. Chen, L. Cai, and H. Ling, “M2Det: A
+single-shot object detector based on multi-level feature pyramid network,”
+in Proc. AAAI Conf. Art. Intel. (AAAI), vol. 33, Jan. 2019, pp. 9259–9266.
+38. D. J. Fagnant and K. Kockelman, “Preparing a nation for autonomous
+vehicles: Opportunities, barriers and policy recommendations,” Transp.
+Res. A, Policy Pract., vol. 77, pp. 167–181, Jul. 2015.
+
+39. H. Zhang, L. Qin, J. Li, Y. Guo, Y. Zhou, J. Zhang, and Z. Xu, “Real-time
+detection method for small traffic signs based on YOLOv3,” IEEE Access,
+vol. 8, pp. 64145–64156, 2020.
+40. H. Lai, L. Chen, W. Liu, Z. Yan, and S. Ye, “STC-YOLO: Small object detection
+network for traffic signs in complex environments,” Sensors, vol. 23, no. 11,
+p. 5307, Jun. 2023, doi: 10.3390/s23115307.
+41. A. Talebpour and H. S. Mahmassani, “Influence of connected and
+autonomous vehicles on traffic flow stability and throughput,” Transp. Res.
+C, Emerg. Technol., vol. 71, pp. 143–163, Oct. 2016.
+42. A. Bochkovskiy, C.-Y. Wang, and H.-Y. M. Liao, “YOLOv4: Optimal speed and
+accuracy of object detection,” 2020, arXiv:2004.10934.
+43. M. Ahmed and A. Cook, “Analysis of freeway traffic time series data by
+using box-jenkins techniques,” Transp. Res. Rec., vol. 773, pp. 1–9, Jan.
+1979.
+44. R. E. Stern, S. Cui, M. L. Delle Monache, R. Bhadani, M. Bunting, M.
+Churchill, N. Hamilton, R. Haulcy, H. Pohlmann, F. Wu, B. Piccoli, B. Seibold,
+J. Sprinkle, and D. B. Work, “Dissipation of stop- and-go waves via control
+of autonomous vehicles: Field experiments,” Transp. Res. C, Emerg.
+Technol., vol. 89, pp. 205–221, Apr. 2018.
+45. S. Lee and D. B. Fambro, “Application of subset autoregressive integrated
+moving average model for short-term freeway traffic volume forecasting,”
+Transp. Res. Rec., J. Transp. Res. Board, vol. 1678, no. 1, pp. 179–188, Jan.
+1999, doi: 10.3141/1678-22.
+46. R. Girshick, J. Donahue, T. Darrell, and J. Malik, “Rich feature hierarchies for
+accurate object detection and semantic segmentation,” in Proc. IEEE Conf.
+Comput. Vis. Pattern Recognit., Jun. 2014, pp. 580–587.
+47. Z. Cai and N. Vasconcelos, “Cascade R-CNN: Delving into high quality
+object detection,” in Proc. IEEE/CVF Conf. Comput. Vis. Pattern Recognit.,
+Jun. 2018, pp. 6154–6162.
+48. M. J. S. Shiri and H. R. Maleki, “Maximum green time settings for traffic-
+actuated signal control at isolated intersections using fuzzy logic,” Int. J.
+Fuzzy Syst., vol. 19, no. 1, pp. 247–256, Feb. 2017.
+
+49. H. Zhang, M. Liang, and Y. Wang, “YOLO-BS: A traffic sign detection
+algorithm based on YOLOv8,” Sci. Rep., vol. 15, no. 1, Mar. 2025. [Online].
+Available: https://www.nature.com/articles/s41598-025-88184-0.
+50. A. Pell, A. Meingast, and O. Schauer, “Trends in real-time traffic simulation,”
+Transp. Res. Proc., vol. 25, pp. 1477–1484, Jan. 2017.
+51. A. D. Patire, M. Wright, B. Prodhomme, and A. M. Bayen, “How much GPS
+data do we need? ” Transp. Res. C, Emerg. Technol., vol. 58, pp. 325–342,
+Sep. 2015.
+52. D. Wu, S. Lv, M. Jiang, and H. Song, “Using channel pruning-based YOLO v4
+deep learning algorithm for the real-time and accurate detection of apple
+flowers in natural environments,” Comput. Electron. Agricult., vol. 178,
+2020, Art. no. 105742.
+53. D. Nalic, A. Pandurevic, A. Eichberger, M. Fellendorf, and B. Rogic,
+“Software framework for testing of automated driving systems in the traffic
+environment of vissim,” Energies, vol. 14, no. 11, p. 3135, May 2021.
+54. S.-K. Tai, C. Dewi, R.-C. Chen, Y.-T. Liu, X. Jiang, and H. Yu, “Deep learning
+for traffic sign recognition based on spatial pyramid pooling with scale
+analysis,” Appl. Sci., vol. 10, no. 19, p. 6997, Oct. 2020.
+55. B. Moghimi, A. Safikhani, C. Kamga, and W. Hao, “Cycle-length prediction in
+actuated traffic-signal control using ARIMA model,” J. Comput. Civil Eng.,
+vol. 32, no. 2, Mar. 2018, Art. no. 04017083.
+56. D. Ma, X. Song, and P. Li, “Daily traffic flow forecasting through a contextual
+convolutional recurrent neural network modeling inter- and intra-day traffic
+patterns,” IEEE Trans. Intell. Transp. Syst., vol. 22, no. 5, pp. 2627–2636,
+May 2021, doi: 10.1109/TITS.2020.2973279.
+57. A. Shustanov and P. Yakimov, “CNN design for real-time traffic sign
+recognition,” Proc. Eng., vol. 201, pp. 718–725, Dec. 2017.
+58. M. Usama, R. Ma, J. Hart, and M. Wojcik, “Physics-informed neural
+networks (PINNs)-based traffic state estimation: An application to traffic
+network,” Algorithms, vol. 15, no. 12, p. 447, Nov. 2022.
+
+59. X. Lin, “Exploring the role of ChatGPT as a facilitator for motivating self-
+directed learning among adult learners,” Adult Learn., pp. 1–2, Jun. 2023.
+60. Y. Feng and S. Wang, “A forecast for bicycle rental demand based on
+random forests and multiple linear regression,” in Proc. IEEE/ACIS 16th Int.
+Conf. Comput. Inf. Sci. (ICIS), May 2017, pp. 101–105, doi: 10.1109/ICIS.
+2017.7959977.
+61. R. Girshick, J. Donahue, T. Darrell, and J. Malik, “Rich feature hierarchies for
+accurate object detection and semantic segmentation,” in Proc. IEEE Conf.
+Comput. Vis. Pattern Recognit., Mali, Jun. 2014, pp. 580–587.
+62. D. G. Lowe, “Distinctive image features from scale-invariant keypoints,” Int.
+J. Comput. Vis., vol. 69, pp. 91–110, Nov. 2004, doi: 10.1023/B:VISI.
+0000029664.99615.94.
+63. J. Cao, J. Zhang, and W. Huang, “Traffic sign detection and recognition
+using multi-scale fusion and prime sample attention,” IEEE Access, vol. 9,
+pp. 3579–3591, 2021.
+64. J. Redmon and A. Farhadi, “YOLOv3: An incremental improvement,” arXiv
+preprint arXiv:1804.02767, 2018.
+65. C. Ouyang, Z. Zhan, and F. Lv, “A comparative study of traffic signal control
+based on reinforcement learning algorithms,” World Electr. Vehicle J., vol.
+15, no. 6, p. 246, Jun. 2024.
+66. J. Yu and W. Zhang, “Face mask wearing detection algorithm based on
+improved YOLO-v4,” Sensors, vol. 21, no. 9, p. 3263, May 2021.
+67. C. Nie, H. Wei, J. Shi, and M. Zhang, “Optimizing actuated traffic signal
+control using license plate recognition data: Methods for modeling and
+algorithm development,” Transp. Res. Interdiscipl. Perspect., vol. 9, Mar.
+2021, Art. no. 100319.
+68. P. Vovsha and S. Bekhor, “Link-nested logit model of route choice:
+Overcoming route overlapping problem,” Transp. Res. Rec., J. Transp. Res.
+Board, vol. 1645, no. 1, pp. 133–142, Jan. 1998, doi: 10.3141/1645-17.
+
+69. X. Qian, T. Lei, J. Xue, Z. Lei, and S. V. Ukkusuri, “Impact of transportation
+network companies on urban congestion: Evidence from large-scale
+trajectory data,” Sustain. Cities Soc., vol. 55, Apr. 2020, Art. no. 102053.
+70. D. Tabernik and D. Skocaj, “Deep learning for large-scale traffic-sign
+detection and recognition,” IEEE Trans. Intell. Transp. Syst., vol. 21, no. 4,
+pp. 1427–1440, Apr. 2020.
+71. Y. Tian, Q. Ye, and D. Doermann, “YOLOv12: Attention-centric real-time
+object detectors,” 2025, arXiv:2502.12524.
+72. Y. Liu and D. R. Huang, “Color standardization of traffic sign images based
+on multi-color space cascade classification,” Comput. Eng., vol. 46, no. 9,
+pp. 233–241, 2020.
+73. Z. Xu, K. Zhang, H. Min, Z. Wang, X. Zhao, and P. Liu, “What drives people to
+accept automated vehicles? Findings from a field experiment,” Transp. Res.
+C, Emerg. Technol., vol. 95, pp. 320–334, Oct. 2018.
+74. R. Girshick, “Fast R-CNN,” in Proc. IEEE Int. Conf. Comput. Vis. (ICCV), Dec.
+2015, pp. 1440–1448.
+75. C.-Y. Fang, S.-W. Chen, and C.-S. Fuh, “Road-sign detection and tracking,”
+IEEE Trans. Veh. Technol., vol. 52, no. 5, pp. 1329–1341, Sep. 2003.
+76. M. Kuwahara, A. Takenouchi, and K. Kawai, “Traffic state estimation by
+backward moving observers: An application and validation under an
+incident,” Transp. Res. C, Emerg. Technol., vol. 127, Jun. 2021, Art. no.
+103158.
+77. S. Wang, X. Xie, K. Huang, J. Zeng, and Z. Cai, “Deep reinforcement
+learning-based traffic signal control using high-resolution event-based
+data,” Entropy, vol. 21, no. 8, p. 744, Jul. 2019.
+78. C.-Y. Wang, A. Bochkovskiy, and H.-Y.-M. Liao, “YOLOv7: Trainable bag-of-
+freebies sets new state-of-the-art for real-time object detectors,” in Proc.
+IEEE/CVF Conf. Comput. Vis. Pattern Recognit. (CVPR), Jun. 2023, pp.
+7464–7475.
+
+79. S. Bahrami and M. J. Roorda, “Optimal traffic management policies for
+mixed human and automated traffic flows,” Transp. Res. A, Policy Pract.,
+vol. 135, pp. 130–143, May 2020, doi: 10.1016/j.tra.2020.03.007.
+80. Z. Zhu, D. Liang, S. Zhang, X. Huang, B. Li, and S. Hu, “Traffic-sign detection
+and classification in the wild,” in Proc. IEEE Conf. Comput. Vis. Pattern
+Recognit. (CVPR), New York, NY, USA, Jun. 2016, pp. 2110–2118.
+81. Q. Xu, X. Zhang, R. Cheng, Y. Song, and N. Wang, “Occlusion problem-
+oriented adversarial faster-RCNN scheme,” IEEE Access, vol. 7, pp.
+170362–170373, 2019, doi: 10.1109/ACCESS.2019.2955685.
+82. J. Li, X. Liang, Y. Wei, T. Xu, J. Feng, and S. Yan, “Perceptual generative
+adversarial networks for small object detection,” in Proc. IEEE Conf.
+Comput. Vis. Pattern Recognit. (CVPR), Jul. 2017, pp. 1951–1959.
+83. X. Tu, S. Zhao, and M. Tan, “MaxViT: Multi-axis vision transformer,” in Proc.
+Eur. Conf. Comput. Vis. (ECCV), 2022.
+84. B. Williams and L. Hoel, “Modeling and forecasting vehicular traffic flow as
+a seasonal ARIMA process: Theoretical basis and empirical results,” J.
+Transp. Eng., vol. 129, no. 6, pp. 664–672, Nov./Dec. 2003, doi: 10.1061/
+(ASCE)0733-947X(2003)129:6(664).
+85. J. G. Wardrop and G. Charlesworth, “A method of estimating speed and
+flow of traffic from a moving vehicle,” Proc. Inst. Civil Eng., vol. 3, no. 1, pp.
+158–171, Jan. 1954, doi: 10.1680/ipeds.1954.11628.
+86. C.-J. Jin, W. Wang, R. Jiang, H. M. Zhang, H. Wang, and M.-B. Hu,
+“Understanding the structure of hyper-congested traffic from empirical and
+experimental evidences,” Transp. Res. C, Emerg. Technol., vol. 60, pp. 324–
+338, Nov. 2015, doi: 10.1016/j.trc.2015.09.007.
+87. Roboflow. ( Jun. 2023 ). Self-Driving Cars Dataset (SDCD). [Online].
+Available: https://universe.roboflow.com/selfdriving-car-qtywx/self-driving-
+cars-lfjou.
+88. J. Redmon and A. Farhadi, YOLOv3: An Incremental Improvement. Ithaca,
+NY, USA : Cornell University, 2018.
+
+89. K. He, X. Zhang, S. Ren, and J. Sun, “Deep residual learning for image
+recognition,” in Proc. IEEE Conf. Comput. Vis. Pattern Recognit. (CVPR),
+Jun. 2016, pp. 770–778.
+90. C.-Y. Wang, I.-H. Yeh, and H.-Y. M. Liao, “You only learn one representation:
+Unified network for multiple tasks,” 2021, arXiv:2105.04206.
+91. Z. Ge, S. Liu, F. Wang, Z. Li, and J. Sun, “YOLOx: Exceeding YOLO series in
+2021,” arXiv preprint arXiv:2107.08430, 2021.
+92. M. Lu, K. Wevers, and R. Van Der Heijden, “Technical feasibility of advanced
+driver assistance systems (ADAS) for road traffic safety,” Transp. Planning
+Technol., vol. 28, no. 3, pp. 167–187, Jun. 2005.
+93. H. Bay, T. Tuytelaars, and G. L. Van, SURF: Speeded Up Robust Features,
+vol. 3951. Berlin, Germany : Springer, 2006, doi: 10.1007/11744023_32.
+94. E. I. Vlahogianni, J. C. Golias, and M. G. Karlaftis, “Short-term traffic
+forecasting: Overview of objectives and methods,” Transp. Rev., vol. 24, no.
+5, pp. 533–557, Sep. 2004, doi: 10.1080/0144164042000195072.
+95. Y. Gu, W. Lu, L. Qin, M. Li, and Z. Shao, “Short-term prediction of lane-level
+traffic speeds: A fusion deep learning model,” Transp. Res. C, Emerg.
+Technol., vol. 106, pp. 1–16, Sep. 2019, doi: 10.1016/j.trc.2019.07.003.
+96. R. Girshick, “Fast R-CNN,” in Proc. 28th IEEE Conf. Comput. Vis. Pattern
+Recognit., New York, NY, USA, Dec. 2015, pp. 1440–1448.
+97. M. Duo, Y. Qi, G. Lina, and E. Xu, “A short-term traffic flow prediction model
+based on EMD and GPSO-SVM,” in Proc. IEEE 2nd Adv. Inf. Technol.,
+Electron. Autom. Control Conf. (IAEAC), Mar. 2017, pp. 2554–2558, doi:
+10.1109/IAEAC.2017.8054485.
+98. M. Lippi, M. Bertini, and P. Frasconi, “Short-term traffic flow forecasting: An
+experimental comparison of time-series analysis and supervised learning,”
+IEEE Trans. Intell. Transp. Syst., vol. 14, no. 2, pp. 871–882, Jun. 2013, doi:
+10.1109/TITS.2013.2247040.
+99. H. L. Khoo and K. S. Asitha, “User requirements and route choice response
+to smart phone traffic applications (apps),” Travel Behaviour Soc., vol. 3,
+pp. 59–70, Jan. 2016.
+
+100. B. N. Passow, D. Elizondo, F. Chiclana, S. Witheridge, and E. Goodyer,
+“Adapting traffic simulation for traffic management: A neural network
+approach,” in Proc. 16th Int. IEEE Conf. Intell. Transp. Syst. (ITSC), Oct.
+2013, pp. 1402–1407.
+101. R. Féraud and F. Clérot, “A methodology to explain neural network
+classification,” Neural Netw., vol. 15, no. 2, pp. 237–246, Mar. 2002.
+102. R. Khanam and M. Hussain, “YOLOv11: An overview of the key
+architectural enhancements,” 2024, arXiv:2410.17725.
+103. S. R. Quasar, R. Sharma, A. Mittal, M. Sharma, P. Sharma, and A.
+Alkhayyat, “Traffic sign detection and recognition using ensemble object
+detection models,” in Proc. Int. Conf. Innov. Comput. Commun. (ICICC).
+Singapore : Springer, 2023, pp. 767–788, doi:
+10.1007/978-981-99-4071-4_59.
+104. D. J. Edwards, J. Akhtar, I. Rillie, N. Chileshe, J. H. K. Lai, C. J. Roberts,
+and O. Ejohwomu, “Systematic analysis of driverless technologies,” J.
+Eng., Des. Technol., vol. 20, no. 6, pp. 1388–1411, Dec. 2022.
+105. D. Temel, M.-H. Chen, and G. AlRegib, “Traffic sign detection under
+challenging conditions: A deeper look into performance variations and
+spectral characteristics,” IEEE Trans. Intell. Transp. Syst., vol. 21, no. 9, pp.
+3663–3673, Sep. 2020.
+106. R. Yasdi, “Prediction of road traffic using a neural network approach,”
+Neural Comput. Appl., vol. 8, no. 2, pp. 135–142, May 1999.
+107. C.-Y. Wang, A. Bochkovskiy, and H. M. Liao, “Scaled-YOLOv4: Scaling
+cross stage partial network,” in Proc. IEEE/CVF Conf. Comput. Vis.
+Pattern Recognit. (CVPR), Jun. 2021, pp. 13024–13033.
+108. N. Dalal and B. Triggs, “Histograms of oriented gradients for human
+detection,” in Proc. IEEE Comput. Soc. Conf. Comput. Vis. Pattern
+Recognit., vol. 1, no. 1, Jun. 2005, pp. 886–893, doi: 10.1109/CVPR.
+2005.177.
+
+109. P. Sun, R. Zhang, Y. Jiang, T. Kong, C. Xu, W. Zhan, M. Tomizuka, L. Li, Z.
+Yuan, C. Wang, and P. Luo, “Sparse R-CNN: End-to-end object detection
+with learnable proposals,” 2020, arXiv:2011.12450. [Online]. Available:
+http://arxiv.org/abs/2011.12450.
+110. F. Rasheed, K. A. Yau, R. Md. Noor, C. Wu, and Y.-C. Low, “Deep
+reinforcement learning for traffic signal control: A review,” IEEE Access,
+vol. 8, pp. 208016–208044, 2020.
+111. M. Takaki and H. Fujiyoshi, “Traffic sign recognition using SIFT features,”
+IEEJ Trans. Electron. Inf. Syst., vol. 129, no. 5, pp. 824–831, 2009.
+112. S. Xu, “Robust traffic sign shape recognition using geometric matching,”
+IET Intell. Transp. Syst., vol. 3, no. 1, pp. 10–18, Mar. 2009.
+113. X. Baro, S. Escalera, J. Vitria, O. Pujol, and P. Radeva, “Traffic sign
+recognition using evolutionary AdaBoost detection and forest-ECOC
+classification,” IEEE Trans. Intell. Transp. Syst., vol. 10, no. 1, pp. 113–126,
+Mar. 2009.
+114. L. Telesca and M. Lovallo, “Analysis of the temporal properties in car
+accident time series,” Phys. A, Stat. Mech. Appl., vol. 387, no. 13, pp.
+3299–3304, May 2008.
+115. V. Alexiadis, J. Colyar, J. Halkias, R. Hranac, and G. McHale, “The next
+generation simulation program,” ITE J. Inst. Transp. Eng., vol. 74, no. 8, p.
+22, 2004.
+116. Y. Wei, Q. Tian, J. Guo, W. Huang, and J. Cao, “Multi-vehicle detection
+algorithm through combining Harr and HOG features,” Math. Comput.
+Simul., vol. 155, pp. 130–145, Jan. 2018, doi: 10.1016/j.matcom.
+2017.12.011.
+117. J. Pang, K. Chen, J. Shi, H. Feng, W. Ouyang, and D. Lin, “Libra R-CNN:
+Towards balanced learning for object detection,” in Proc. IEEE/CVF Conf.
+Comput. Vis. Pattern Recognit. (CVPR), Jun. 2019, pp. 821–830.
+118. T.-Y. Lin, M. Maire, S. Belongie, J. Hays, P. Perona, D. Ramanan, P. Dollár,
+and C. L. Zitnick, “Microsoft COCO: Common objects in context,” in Proc.
+Eur. Conf. Comput. Vis. (ECCV), 2014, pp. 740–755.
+
+119. R. H. Rasshofer and K. Gresser, “Automotive radar and LiDAR systems for
+next generation driver assistance functions,” Adv. Radio Sci., vol. 3, pp.
+205–209, May 2005, doi: 10.5194/ars-3-205-2005.
+120. W. Liu, D. Anguelov, D. Erhan, C. Szegedy, S. Reed, C.-Y. Fu, and A. C. Berg,
+“SSD: Single shot MultiBox detector,” in Computer Vision—ECCV.
+Amsterdam, The Netherlands : Springer, 2016, pp. 21–37.
+121. D. Krajzewicz, G. Hertkorn, C. Rössel, and P. Wagner, “SUMO (simulation
+of urban MObility)—An open-source traffic simulation,” in Proc. 4th Middle
+East Symp. Simulation Modelling (MESM), Sharjah, UAE, 2002, pp. 183–
+187.
+122. C. Klauer, T. A. Dingus, V. L. Neale, J. D. Sudweeks, and D. J. Ramsey, “The
+impact of driver inattention on near-crash/crash risk: An analysis using
+the 100-car naturalistic driving study data, ” Nat. Highway Traffic Saf.
+Admin., Washington, DC, USA, 2006.
+123. Y. Wang, “Generative AI for autonomous driving: Frontiers and
+opportunities,” 2025, arXiv:2505.08854.
+124. J. Zhang, F.-Y. Wang, K. Wang, W.-H. Lin, X. Xu, and C. Chen, “Data-driven
+intelligent transportation systems: A survey,” IEEE Trans. Intell. Transp.
+Syst., vol. 12, no. 4, pp. 1624–1639, Dec. 2011, doi: 10.1109/TITS.
+2011.2158001.
+125. P. G. Gipps, “A behavioural car-following model for computer simulation,”
+Transp. Res. B, Methodol., vol. 15, no. 2, pp. 105–111, Apr. 1981.
+126. W.-F. Zheng and J.-Y. Zhang, “A cellular automata model of traffic flow
+with variable probability of randomization,” Chin. Phys. B, vol. 24, no. 5,
+May 2015, Art. no. 058902.
+127. S. P. Rajendran, L. Shine, R. Pradeep, and S. Vijayaraghavan, “Real-time
+traffic sign recognition using YOLOv3 based detector,” in Proc. 10th Int.
+Conf. Comput., Commun. Netw. Technol. (ICCCNT), Jul. 2019, pp. 1–7.
+128. F. Rempe, P. Franeck, and K. Bogenberger, “On the estimation of traffic
+speeds with deep convolutional neural networks given probe data,”
+Transp. Res. C, Emerg. Technol., vol. 134, Jan. 2022, Art. no. 103448, doi:
+10.1016/j.trc.2021.103448.
+
+129. J. Lutin, G. Krykewyc, J. Hacker, and T. Marchwinski, “The revolutionary
+development of self-driving vehicles and implications for the
+transportation engineering profession,” Transp. Eng., vol. 83, pp. 28–32,
+Jul. 2013.
+130. Z. Hang, C. Wu, Z. Zhang, Y. Zhu, Z. Zhang, H. Lin, Y. Sun, T. He, J. Mueller,
+R. Manmatha, and M. Li, “ResNest: Split-attention networks,” Apr. 2020,
+arXiv:2004.08955. [Online]. Available: https://arxiv.org/abs/2004.08955.
+131. Transport : Overview, World Bank, Sep. 2023.
+132. A. R. Dubey, N. Shukla, and D. Kumar, Detection Classication Road Signs
+Using HOG-SVM Method, vol. 766. Singapore : Springer, 2020, doi:
+10.1007/978-981-13-9683-0_6.
+133. L. Yang, X. Meng, and G. E. Karniadakis, “B-PINNs: Bayesian physics-
+informed neural networks for forward and inverse PDE problems with
+noisy data,” J. Comput. Phys., vol. 425, Jan. 2021, Art. no. 109913.
+134. H. Fleyeh and M. Dougherty, “Road and traffic sign detection and
+recognition,” in Proc. 16th Mini-EURO Conf. 10th Meeting (EWGT), 2005,
+pp. 644–653.
+135. Y. Wu, Z. Li, Y. Chen, K. Nai, and J. Yuan, “Real-time traffic sign detection
+and classification towards real traffic scene,” Multimedia Tools Appl., vol.
+79, nos. 25–26, pp. 18201–18219, Jul. 2020.
+136. W. L. Li, X. G. Li, and Y. Qin, “Real-time traffic sign detection algorithm
+based on dynamic threshold segmentation and SVM,” J. Comput., 31, no.
+6, pp. 258–273, 2020.
+137. T. L. Pan, A. Sumalee, R. X. Zhong, and N. Indra-payoong, “Short-term
+traffic state prediction based on temporal–spatial correlation,” IEEE Trans.
+Intell. Transp. Syst., vol. 14, no. 3, pp. 1242–1254, Sep. 2013, doi:
+10.1109/TITS.2013.2258916.
+138. L. Hejtmánek, I. Oravcová, J. Motýl, J. Horácek, and I. Fajnerová, “Spatial
+knowledge impairment after GPS guided navigation: Eye-tracking study in
+a virtual town,” Int. J. Hum.-Comput. Stud., vol. 116, pp. 15–24, Aug. 2018.
+
+139. S. R. Chandra and H. Al-Deek, “Predictions of freeway traffic speeds and
+volumes using vector autoregressive models,” J. Intell. Transp. Syst., vol.
+13, no. 2, pp. 53–72, May 2009, doi: 10.1080/15472450902858368.
+140. D. F. Xie, Z. Y. Gao, and X. M. Zhao, “The effect of ACC vehicles to mixed
+traffic flow consisting of manual and ACC vehicles,” Chin. Phys. B, vol. 17,
+no. 12, pp. 4440–4445, 2008.
+141. F. G. Habtemichael and M. Cetin, “Short-term traffic flow rate forecasting
+based on identifying similar traffic patterns,” Transp. Res. C, Emerg.
+Technol., vol. 66, pp. 61–78, May 2015, doi: 10.1016/j.trc.2015.08.017.
+142. S. Ren, K. He, R. Girshick, and J. Sun, “Faster R-CNN: Towards real-time
+object detection with region proposal networks,” IEEE Trans. Pattern Anal.
+Mach. Intell., vol. 39, no. 6, pp. 1137–1149, Jun. 2017.
+143. S. Ren, K. He, R. Girshick, and J. Sun, “Faster R-CNN: Towards real-time
+object detection with region proposal networks,” in Proc. Adv. Neural Inf.
+Process. Syst., vol. 28, 2015, pp. 1–9.
+144. A. Gupta, S. Narayan, K. J. Joseph, S. Khan, F. S. Khan, and M. Shah, “OW-
+DETR: Open-world detection transformer,” in Proc. IEEE/CVF Conf.
+Comput. Vis. Pattern Recognit. (CVPR), New Orleans, LA, USA, Jun. 2022,
+pp. 9235–9244.
+145. S. Damadam, M. Zourbakhsh, R. Javidan, and A. Faroughi, “An intelligent
+IoT based traffic light management system: Deep reinforcement learning,”
+Smart Cities, vol. 5, no. 4, pp. 1293–1311, Sep. 2022.
+146. S. S. S. M. Qadri, M. A. Gökçe, and E. Öner, “State-of-art review of traffic
+signal control methods: Challenges and opportunities,” Eur. Transp. Res.
+Rev., vol. 12, no. 1, pp. 1–23, Dec. 2020.
+147. S. Solaiappan, B. R. Kumar, N. Anbazhagan, Y. Song, G. P. Joshi, and W.
+Cho, “Vehicular traffic flow analysis and minimize the vehicle queue
+waiting time using signal distribution control algorithm,” Sensors, vol. 23,
+no. 15, p. 6819, Jul. 2023.
+148. S. Movius and J. Van Vuuren, “Self-organisation in traffic signal control
+algorithms under light traffic conditions,” ORiON, vol. 35, no. 1, pp. 57–87,
+Jun. 2019.
+
+149. L. Kohnke, B. L. Moorhouse, and D. Zou, “ChatGPT for language teaching
+and learning,” RELC J., vol. 54, no. 2, pp. 537–550, Aug. 2023.
+150. E. Petridou and M. Moustaki, “Human factors in the causation of road
+traffic crashes,” Eur. J. Epidemiol., vol. 16, no. 9, pp. 819–826, Sep. 2000.
+151. B. L. Smith, B. M. Williams, and R. K. Oswald, “Comparison of parametric
+and nonparametric models for traffic flow forecasting,” Transp. Res. C,
+Emerg. Technol., vol. 10, no. 4, pp. 303–321, Aug. 2002, doi: 10.1016/
+S0968-090X(02)00009-8.
+152. Y. Wu, A. Kirillov, F. Massa, W.-Y. Lo, and R. Girshick. ( 2019 ). Detectron2:
+A PyTorch-Based Modular Object Detection Library. Facebook AI
+Research. [Online]. Available: https://github.com/facebookresearch/
+detectron2.
+153. Y. Zhang, N. Bhattarai, J. Zhao, H. Liu, and H. Xu, “An unsupervised
+clustering method for processing roadside LiDAR data with improved
+computational efficiency,” IEEE Sensors J., vol. 22, no. 11, pp. 10684–
+10691, Jun. 2022, doi: 10.1109/JSEN.2022.3166957.
+154. M. Cools, E. Moons, and G. Wets, “Investigating the variability in daily
+traffic counts through use of ARIMAX and SARIMAX models,” Transp.
+Res. Rec., J. Transp. Res. Board, vol. 2136, no. 1, pp. 57–66, Jan. 2009,
+doi: 10.3141/2136-07.
+155. C.-Y. Wang, A. Bochkovskiy, and H.-Y. M. Liao, “YOLOv7: Trainable bag-of-
+freebies sets new state-of-the-art for real-time object detectors,” 2022,
+arXiv:2207.02696.
+156. D. Tang and Y. Duan, “Traffic signal control optimization based on neural
+network in the framework of model predictive control,” Actuators, vol. 13,
+no. 7, p. 251, Jul. 2024.
+157. J. Platt, “Sequential minimal optimization: A fast algorithm for training
+support vector machines,” Microsoft Res., Bengaluru, India, Tech. Rep.
+MSR-TR-98-14, Apr. 1998.
+
+158. M. M. Iqbal, M. T. Mehmood, S. Jabbar, S. Khalid, A. Ahmad, and G. Jeon,
+“An enhanced framework for multimedia data: Green transmission and
+portrayal for smart traffic system,” Comput. Electr. Eng., vol. 67, pp. 291–
+308, Apr. 2018.
+159. P. Jing, H. Huang, and L. Chen, “An adaptive traffic signal control in a
+connected vehicle environment: A systematic review,” Information, vol. 8,
+no. 3, p. 101, Aug. 2017.
+160. M.-S. Wang and Z.-R. Zhang, “FPGA implementation of HOG based multi-
+scale pedestrian detection,” in Proc. IEEE Int. Conf. Appl. Syst. Invention
+(ICASI), Apr. 2018, pp. 1099–1102, doi: 10.1109/ICASI.2018.8394472.
+161. J. Zheng and H. X. Liu, “Estimating traffic volumes for signalized
+intersections using connected vehicle data,” Transp. Res. C, Emerg.
+Technol., vol. 79, pp. 347–362, Jun. 2017, doi: 10.1016/j.trc.2017.03.007.
+162. A. Dosovitskiy, L. Beyer, A. Kolesnikov, D. Weissenborn, X. Zhai, T.
+Unterthiner, M. Dehghani, M. Minderer, G. Heigold, S. Gelly, J. Uszkoreit,
+and N. Houlsby, “An image is worth 16×16 words: Transformers for image
+recognition at scale,” in Proc. Int. Conf. Learn. Represent. (ICLR), 2021.
+163. U. Kamal, T. I. Tonmoy, S. Das, and M. K. Hasan, “Automatic traffic sign
+detection and recognition using SegU-Net and a modified Tversky loss
+function with L1-constraint,” IEEE Trans. Intell. Transp. Syst., vol. 21, no. 4,
+pp. 1467–1479, Apr. 2020.
+164. M. Bando, K. Hasebe, A. Nakayama, A. Shibata, and Y. Sugiyama,
+“Dynamical model of traffic congestion and numerical simulation,” Phys.
+Rev. E, Stat. Phys. Plasmas Fluids Relat. Interdiscip. Top., vol. 51, no. 2,
+pp. 1035–1042, Feb. 1995.
+165. J. F. Khan, S. M. A. Bhuiyan, and R. R. Adhami, “Image segmentation and
+shape analysis for road-sign detection,” IEEE Trans. Intell. Transp. Syst.,
+vol. 12, no. 1, pp. 83–96, Mar. 2011.
+166. B. Suh, Y. Shao, and Z. Sun, “Vehicle speed prediction for connected and
+autonomous vehicles using communication and perception,” in Proc.
+Amer. Control Conf. (ACC), Jul. 2020, pp. 448–453.
+
+167. X. Bangquan and W. X. Xiong, “Real-time embedded traffic sign
+recognition using efficient convolutional neural network,” IEEE Access,
+vol. 7, pp. 53330–53346, 2019.
+168. C. Lin, Y. Guo, W. Li, H. Liu, and D. Wu, “An automatic lane marking
+detection method with low-density roadside LiDAR data,” IEEE Sensors J.,
+vol. 21, no. 8, pp. 10029–10038, Apr. 2021, doi: 10.1109/JSEN.
+2021.3057999.
+169. Z. Liang, J. Shao, D. Zhang, and L. Gao, “Traffic sign detection and
+recognition based on pyramidal convolutional networks,” Neural Comput.
+Appl., vol. 32, no. 11, pp. 6533–6543, Jun. 2020.
+170. G. Dhingra, S. Supreeth, K. Neha, R. Amruthashree, and D. Eshitha, “Traffic
+management using convolution neural network,” Int. J. Eng. Adv. Technol.
+(IJEAT), vol. 8, no. 5S, pp. 146–149, 2019.
+171. M. A. Wani and H. F. Bhat, “Multiclass SVM algorithms for wind speed
+prediction,” in Proc. IEEE 6th Int. Conf. Renew. Energy Res. Appl. (ICRERA),
+Nov. 2017, pp. 1139–1143, doi: 10.1109/ICRERA.2017.8191231.
+172. Z. Zeng, X. Shi, and F. Li, “A traffic sign object detection network based on
+YOLOv8-EfficientNet,” in Proc. 5th Int. Seminar Artif. Intell., Netw. Inf.
+Technol. (AINIT), Mar. 2024, pp. 2309–2314, doi: 10.1109/
+ainit61980.2024.10581691.
+173. J. Levinson, J. Askeland, J. Becker, J. Dolson, D. Held, S. Kammel, J. Z.
+Kolter, D. Langer, O. Pink, V. Pratt, M. Sokolsky, G. Stanek, D. Stavens, A.
+Teichman, M. Werling, and S. Thrun, “Towards fully autonomous driving:
+Systems and algorithms,” in Proc. IEEE Intell. Vehicles Symp. (IV), Jun.
+2011, pp. 163–168.
+174. H. S. Mahmassani, “50th anniversary invited article—Autonomous
+vehicles and connected vehicle systems: Flow and operations
+considerations,” Transp. Sci., vol. 50, no. 4, pp. 1140–1162, Jun. 2016.
+175. Y. Wu, Z. Li, Y. Chen, K. Nai, and J. Yuan, “Real-time traffic sign detection
+and classification towards real traffic scene,” Multimedia Tools Appl., vol.
+79, pp. 18201–18219, Mar. 2020.
+
+176. Y. Shao and Z. Sun, “Eco-approach with traffic prediction and
+experimental validation for connected and autonomous vehicles,” IEEE
+Trans. Intell. Transp. Syst., vol. 22, no. 3, pp. 1562–1572, Mar. 2020, doi:
+10.1109/TITS.2020.2972198.
+177. J. Stallkamp, M. Schlipsing, J. Salmen, and C. Igel, “The German traffic
+sign recognition benchmark: A multi-class classification competition,” in
+Proc. Int. Joint Conf. Neural Netw. Washington, DC, USA : IEEE Press, Jul.
+2011, pp. 1453–1460.
+178. S. L. Jones, A. J. Sullivan, N. Cheekoti, M. D. Anderson, and D. Malave,
+“Traffic simulation software comparison study,” UTCA, Kanpur, India,
+Tech. Rep. 2217, 2004.
+179. S. Zhou, X. L. Zhi, and D. Liu, “A convolutional neural network-based
+method for small traffic sign detection,” J. Tongji Univ. Natural Sci., vol.
+47, no. 11, pp. 1626–1632, 2019.
+180. B. Gong, R. Wei, D. Wu, and C. Lin, “Fleet management for HDVs and CAVs
+on highway in dense fog environment,” J. Adv. Transp., vol. 2020, Aug.
+2020, Art. no. 8842730, doi: 10.1155/2020/8842730.
+181. D. A. Tedjopurnomo, Z. Bao, B. Zheng, F. M. Choudhury, and A. K. Qin, “A
+survey on modern deep neural network for traffic prediction: Trends,
+methods and challenges,” IEEE Trans. Knowl. Data Eng., vol. 34, no. 4, pp.
+1544–1561, Apr. 2022.
+182. L. A. Pipes, “An operational analysis of traffic dynamics,” J. Appl. Phys.,
+vol. 24, no. 3, pp. 274–281, Mar. 1953.
+183. H. Li and W. Li, “Estimating the average road travel time based on soft set
+under connected and autonomous vehicles,” in Proc. 5th Int. Conf. Inf.
+Sci., Comput. Technol. Transp. (ISCTT), Nov. 2020, pp. 566–570, doi:
+10.1109/ISCTT51595.2020.00108.
+184. J. Zhao, H. Xu, H. Liu, J. Wu, Y. Zheng, and D. Wu, “Detection and tracking
+of pedestrians and vehicles using roadside LiDAR sensors,” Transp. Res.
+C, Emerg. Technol., vol. 100, pp. 68–87, Mar. 2019, doi: 10.1016/j.trc.
+2019.01.007.
+
+185. A. Zeroual, F. Harrou, Y. Sun, and N. Messai, “Monitoring road traffic
+congestion using a macroscopic traffic model and a statistical
+monitoring scheme,” Sustain. Cities Soc., vol. 35, pp. 494–510, Nov. 2017.
+186. J. Yoon, J. Jordon, and M. Schaar, “GAIN: Missing data imputation using
+generative adversarial nets,” in Proc. Int. Conf. Mach. Learn., 2018, pp.
+5689–5698.
+187. P. Gil-Jiménez, S. Maldonado-Bascón, H. Gómez-Moreno, S. Lafuente-
+Arroyo, and F. López-Ferreras, “Traffic sign shape classification and
+localization based on the normalized FFT of the signature of blobs and
+2D homographies,” Signal Process., vol. 88, no. 12, pp. 2943–2955, 2008.
+188. G. Kotusevski and K. A. Hawick, “A review of traffic simulation software,”
+in Research Letters in the Information and Mathematical Sciences, vol.
+13, 2009, pp. 35–54.
+189. L. Jian, Z. Li, X. Yang, W. Wu, A. Ahmad, and G. Jeon, “Combining
+unmanned aerial vehicles with artificial-intelligence technology for traffic-
+congestion recognition: Electronic eyes in the skies to spot clogged
+roads,” IEEE Consum. Electron. Mag., vol. 8, no. 3, pp. 81–86, May 2019.
+190. Z. Zhu, D. Liang, S. Zhang, X. Huang, B. Li, and S. Hu, “Traffic-sign
+detection and classification in the wild,” in Proc. IEEE Conf. Comput. Vis.
+Pattern Recognit. (CVPR), Jun. 2016, pp. 2110–2118. [Online]. Available:
+https://cg.cs.tsinghua.edu.cn/traffic-sign/.
+191. S. Gupta and M. Canova, “Eco-driving of connected and autonomous
+vehicles with sequence-to-sequence prediction of target vehicle velocity,”
+in Proc. 6th IFAC Conf. Engine Powertrain Control, Simulation Modeling
+(E-COSM), Aug. 2021, pp. 430–436, doi: 10.1016/j.ifacol.2021.10.200.
+192. Y. Xiaoling, J. Weixin, and Y. Haoran, “Recognition and detection of traffic
+signs based on YOLOV5,” Inf. Technol. Informatization, no. 4, pp. 28–30,
+2021.
+193. R. Girshick, J. Donahue, and T. Darrell, “Rich feature hierarchies for
+accurte object detection and semantic segmentation,” in Proc. 27th IEEE
+Conf. Comput. Vis. Pattern Recognit., New York, NY, USA, Jul. 2014, pp.
+580–587.
+
+194. C. Li, L. Li, H. Jiang, K. Weng, Y. Geng, L. Li, Z. Ke, Q. Li, M. Cheng, and W.
+Nie, “YOLOV6: A single-stage object detection framework for industrial
+applications,” 2022, arXiv:2209.02976.
+195. J. Stallkamp, M. Schlipsing, J. Salmen, and C. Igel, “Man vs. computer:
+Benchmarking machine learning algorithms for traffic sign recognition,”
+Neural Netw., vol. 32, pp. 323–332, Aug. 2012.
+196. H. Gong, T. Mu, Q. Li, H. Dai, C. Li, Z. He, W. Wang, F. Han, A. Tuniyazi, H. Li,
+X. Lang, Z. Li, and B. Wang, “Swin-transformer-enabled YOLOv5 with
+attention mechanism for small object detection on satellite images,”
+Remote Sens., vol. 14, no. 12, p. 2861, Jun. 2022.
+197. R. More, A. Mugal, S. Rajgure, R. B. Adhao, and V. K. Pachghare, “Road
+traffic prediction and congestion control using artificial neural networks,”
+in Proc. Int. Conf. Comput., Analytics Secur. Trends (CAST), Dec. 2016,
+pp. 52–57.
+198. Z. Abbas, A. Al-Shishtawy, S. Girdzijauskas, and V. Vlassov, “Short-term
+traffic prediction using long short-term memory neural networks,” in Proc.
+IEEE Int. Congr. Big Data, Jul. 2018, pp. 57–65.
+199. W. Ma and S. Qian, “High-resolution traffic sensing with probe
+autonomous vehicles: A data-driven approach,” Sensors, vol. 21, no. 2, p.
+464, Jan. 2021, doi: 10.3390/s21020464.
+200. W.-H. Lee and C.-Y. Chiu, “Design and implementation of a smart traffic
+signal control system for smart city applications,” Sensors, vol. 20, no. 2,
+p. 508, Jan. 2020.
+201. J. Redmon, S. Divvala, R. Girshick, and A. Farhadi, “You only look once:
+Unified real-time object detection,” in Proc. 29th IEEE Conf. Comput. Vis.
+Pattern Recognit., New York, NY, USA, Jun. 2016, pp. 779–788.
+202. S. Shi, C. Guo, L. Jiang, Z. Wang, J. Shi, X. Wang, and H. Li, “PV-RCNN:
+Point-voxel feature set abstraction for 3D object detection,” in Proc. IEEE/
+CVF Conf. Comput. Vis. Pattern Recognit. (CVPR), Jun. 2020, pp. 10526–
+10535.
+
+203. A. A. Minhas, S. Jabbar, M. Farhan, and M. Najam ul Islam, “Smart
+methodology for safe life on roads with active drivers based on real-time
+risk and behavioral monitoring,” J. Ambient Intell. Hum. Comput., pp. 1–
+13, Nov. 2019.
+204. K. He, G. Gkioxari, P. Dollár, and R. Girshick, “Mask R-CNN,” in Proc. IEEE
+Int. Conf. Comput. Vis. (ICCV), Oct. 2017, pp. 2980–2988.
+205. H. Liu, X. Kan, S. E. Shladover, X.-Y. Lu, and R. E. Ferlis, “Modeling impacts
+of cooperative adaptive cruise control on mixed traffic flow in multi-lane
+freeway facilities,” Transp. Res. C, Emerg. Technol., vol. 95, pp. 261–279,
+Oct. 2018.
+206. W. Liu, D. Anguelov, and D. Erhan, “SSD: Single shot multibox deteector,” in
+Proc. 14th Eur. Conf. Comput. Vis. Berlin, Germany : Springer, 2016, pp.
+21–37.
+207. A. Bose and P. A. Ioannou, “Analysis of traffic flow with mixed manual and
+semiautomated vehicles,” IEEE Trans. Intell. Transp. Syst., vol. 4, no. 4, pp.
+173–188, Dec. 2003.
