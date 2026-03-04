@@ -18,10 +18,10 @@ __pycache__/
 .streamlit/
 .cache/
 
-# Dataset & Large Weights (Optional, uncomment if you don't want to upload large files to GitHub)
-# Dataset/
-# *.pt
-# *.pth
+#Dataset & Large Weights 
+Dataset/
+*.pt
+*.pth
 Model/
 
 # OS generated files
