@@ -1,0 +1,28 @@
+# Environments
+venv/
+env/
+.env
+.venv/
+
+# Pycache
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+# IDEs
+.vscode/
+.idea/
+
+# Streamlit
+.streamlit/
+.cache/
+
+# Dataset & Large Weights (Optional, uncomment if you don't want to upload large files to GitHub)
+# Dataset/
+# *.pt
+# *.pth
+
+# OS generated files
+.DS_Store
+Thumbs.db
