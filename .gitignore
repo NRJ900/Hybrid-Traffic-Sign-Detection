@@ -23,6 +23,7 @@ __pycache__/
 # *.pt
 # *.pth
 Model/
+
 # OS generated files
 .DS_Store
 Thumbs.db
