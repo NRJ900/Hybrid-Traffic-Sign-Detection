@@ -28,8 +28,8 @@ echo ========================================================
 echo.
 
 :: NOTE: Replace the URL below with your actual GitHub Repository URL once you upload it!
-set REPO_URL=https://github.com/NRJ900/Traffic-Sign-Detection.git
-set PROJECT_DIR=Traffic-Sign-Detection-App
+set REPO_URL=https://github.com/NRJ900/Hybrid-Traffic-Sign-Detection.git
+set PROJECT_DIR=Hybrid-Traffic-Sign-Detection
 
 if not exist "%PROJECT_DIR%" (
     echo Downloading project from GitHub...
@@ -84,7 +84,7 @@ if exist "Traffic-Sign-Detection-App" (
 )
 
 if not exist "venv\Scripts\activate.bat" (
-    echo ERROR: Virtual Environment not found. Please run Option 1 (Install) first!
+    echo ERROR: Virtual Environment not found. Please run Option 1 Install first!
     pause
     goto MENU
 )
