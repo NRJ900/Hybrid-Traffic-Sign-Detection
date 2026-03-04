@@ -1,7 +1,7 @@
 @echo off
 color 0a
 echo ========================================================
-echo   NRJ900's Hybrid Traffic Sign Detection Framework
+echo       Hybrid Traffic Sign Detection Framework
 echo ========================================================
 echo.
 
