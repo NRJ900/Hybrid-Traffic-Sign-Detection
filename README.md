@@ -1,6 +1,6 @@
 # 🚦 Hybrid Traffic Sign Detection Framework
 
-Welcome to the **Hybrid Traffic Sign Detection Framework**, an advanced multi-stage AI pipeline for real-time and high-accuracy traffic sign recognition. Developed by **NRJ900**.
+ **Hybrid Traffic Sign Detection Framework**, an advanced multi-stage AI pipeline for real-time and high-accuracy traffic sign recognition.
 
 ## 🧠 Architecture Overview
 
