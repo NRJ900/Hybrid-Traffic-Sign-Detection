@@ -93,7 +93,7 @@ def process_hybrid_frame(img_bgr, yolo_model, yolo_names, device, half, rcnn, vi
             rcnn_res = rcnn(rcnn_tensor)[0]
         
         # Our custom classes map: 1=prohibitory, 2=danger, 3=mandatory, 4=other
-        custom_labels = {1: "Prohib", 2: "Danger", 3: "Mandatory", 4: "Other"}
+        custom_labels = {1: "Prohib", 2: "Danger", 3: "Mandatory"}# 4: "Other"}
         
         for box, score, label in zip(rcnn_res['boxes'], rcnn_res['scores'], rcnn_res['labels']):
             if score > conf_thresh:

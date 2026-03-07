@@ -1,49 +1,59 @@
-# Project Python Scripts Overview
+# 🚦 Hybrid Traffic Sign Detection Framework: Technical Script Overview
 
-This file documents the purpose of the primary Python scripts used in the Hybrid Traffic Sign Detection Framework.
+This document provides a highly detailed breakdown of the Python source files running the Hybrid AI framework. 
 
-## Root Directory
+---
 
-### `train_rcnn.py`
-A standalone PyTorch script written to custom-train a Faster R-CNN model on a local object detection dataset. 
-* Parses YOLO-formatted `.txt` bounding box coordinates and corresponding images.
-* Prepares a generic `resnet50_fpn` PyTorch model for transfer learning by replacing the classification head.
-* Executes the GPU training loop and saves the resulting model state dictionary to `Model/weights/best_rcnn.pth`.
+## 💻 1. The Application Interface Layer (`Codes/`)
 
-### `Dataset/getting-full-path.py`
-A small utility script likely used for dataset preparation, such as generating absolute file paths for training or testing sets.
+This directory contains the Streamlit User Interfaces and the execution pipelines that the end-user interacts with.
 
-## `Codes/` Directory
+### `Codes/app_hybrid_v8.py` (Modern Architecture)
+**The state-of-the-art implementation of the Hybrid Architecture.**
+*   **YOLOv8 Backpack:** Uses the highly optimized `ultralytics` package to process the First-Stage "Fast Scan", dramatically improving bounding box tightness and CPU/GPU memory inference compared to v5.
+*   **Dynamic Weight Loader:** Features an automated scanning engine that reads the `Model/weights/` directory for both PyTorch `.pt` and Open Neural Network Exchange `.onnx` files, auto-populating the UI UI dropdown without code changes.
+*   **Triple-Model Probability Engine:** Instantiates the YOLOv8, Custom ResNet-50 Faster R-CNN, and Google's OWL Vision Transformer simultaneously. It actively runs Intersection over Union (IoU) algorithms against all 3 model outputs, applying Semantic Verifier Confidence Multiplier math to suppress False Positives.
+*   **Hardware Interface:** Manages asynchronous frame streams from Images, Local `.mp4` storage, and live WebRTC PC Webcams.
 
-### `Codes/app_hybrid.py`
-**The core application file for the Hybrid Framework.**
-* Contains the Streamlit web interface and WebRTC video processing logic.
-* Initializes and manages three concurrent neural networks: YOLOv5, Custom Faster R-CNN, and Vision Transformer (ViT).
-* Implements the **Probabilistic Fusion Engine** to analyze intersections over union (IoU) across detector predictions and apply semantic verification multipliers to render the final bounding boxes.
+### `Codes/app_hybrid.py` (Legacy YOLOv5 Architecture)
+**The original Hybrid Architecture system.**
+*   Runs the exact same Tri-Model Probability Engine as above but mathematically processes Stage 1 purely through the older YOLOv5 PyTorch Hub implementation. 
+*   Because the codebase has been disconnected from the Ultralytics API server, this relies on a local loader script (`Codes/models/experimental.py:attempt_load()`) to inject the `best.pt` file directly into memory.
 
 ### `Codes/app.py`
-The original Streamlit application from the legacy project.
-* Runs solely the YOLOv5 object detector.
-* Provides a baseline comparison for the hybrid multi-stage approach.
+*   The legacy, single-model Streamlit playground.
+*   Runs solely the `best.pt` YOLO detector and renders green boxes immediately. Has no Verification Layer.
 
-### `Codes/detect.py`
-A standalone inference script (standard in YOLO repositories) that can be run from the command line to process images, videos, or webcam feeds without the Streamlit UI.
+### `Codes/detect.py` & `Codes/test.py`
+*   Command-line inference tools standard to YOLO environments. 
+*   `detect.py` allows developers to process batches of images natively without Streamlit.
+*   `test.py` validates the exact mAP (Mean Average Precision) math against a holdout testing dataset.
 
-### `Codes/test.py`
-A testing/validation script designed to evaluate the trained model's accuracy, precision, recall, and mAP (mean Average Precision) against a testing dataset.
+---
 
-### `Codes/hubconf.py`
-A PyTorch Hub configuration file that defines how models in this repository can be loaded via `torch.hub.load()` by defining entry points.
+## 🧠 2. The Training Layer (Root Folder)
 
-## Helper Modules (`Codes/models/` and `Codes/utils/`)
+### `train_rcnn.py`
+**A completely custom Transfer-Learning loop written natively in PyTorch.**
+To verify YOLO's detections, the Hybrid Framework requires a slower, more deliberate two-stage detector. This script builds it:
+1.  **Dataset Ingestion:** Creates a custom PyTorch `TrafficSignDataset` loader that intelligently parses the 1-indexed YOLO `.txt` coordinate files and converts the normalized (Center-X, Center-Y, W, H) values into the absolute pixel (X_Min, Y_Min, X_Max, Y_Max) bounds demanded by Faster R-CNN.
+2.  **Model Amputation:** Downloads a `torchvision` ResNet-50 FPN model trained originally on 80 generalized MS COCO classes. It severs the final classification node and injects a blank `FastRCNNPredictor` configured strictly for 5 channels (4 traffic signs + 1 background).
+3.  **The Loop:** Executes Stochastic Gradient Descent to update the model weights across `N` epochs, dumping the highly trained result to `Model/weights/best_rcnn.pth`.
 
-These directories contain the foundational code for the YOLOv5 architecture:
+---
+
+## ⚙️ 3. The YOLO Mechanics Factory (`Codes/models/` & `Codes/utils/`)
+
+These directories contain the foundational Deep Learning architecture required for the legacy `app_hybrid.py` file to parse `.pt` files without relying on external packages.
 
 ### `Codes/models/yolo.py` & `Codes/models/common.py`
-Define the structural layers and network architecture for the YOLO model.
+*   The literal blueprint of the YOLO brain. This defines the PyTorch structural sequence: `Conv2d` -> `BatchNorm2d` -> `SiLU Activation` -> `C3 Bottleneck` -> `SPPF Spatial Pooling`. 
 
-### `Codes/models/experimental.py`
-Contains the `attempt_load` function used to cleanly load the custom `.pt` weights into the PyTorch environment.
+### `Codes/utils/general.py`
+*   The mathematical heavy lifter. Performs Non-Maximum Suppression (deleting redundant, overlapping AI guesses) and scales tiny 640x640 AI tensors back up into massive 1080p imagery without losing coordinate mapping.
 
-### `Codes/utils/general.py`, `Codes/utils/datasets.py`, `Codes/utils/plots.py`
-Core utility scripts that handle non-maximum suppression (NMS), bounding box scaling, image loading/transformations, and drawing results onto frames.
+### `Codes/utils/datasets.py`
+*   The data ingestion tool. Its most famous piece is the `letterbox` function, which automatically resizes any weirdly shaped photo or video into a perfect mathematical square padded heavily with grey pixels, protecting the aspect ratio of the traffic sign from stretching and destroying the AI's understanding of geometry.
+
+### `Codes/utils/torch_utils.py`
+*   Hardware abstraction. Silently forces heavy AI matrix math over to `cuda:0` if an NVIDIA GPU is detected during runtime, drastically boosting Frames Per Second.

@@ -22,6 +22,8 @@ __pycache__/
 Dataset/
 *.pt
 *.pth
+*.onnx
+*.zip
 
 #others
 Model/*
