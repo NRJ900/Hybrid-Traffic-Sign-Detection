@@ -34,3 +34,4 @@ streamlit-webrtc>=0.44.0
 av>=10.0.0
 transformers>=4.28.0
 accelerate>=0.18.0
+ultralytics>=8.0.0

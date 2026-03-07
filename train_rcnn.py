@@ -124,7 +124,7 @@ def main():
     # Learning rate scheduler (decreases learning rate dynamically as we get closer to the perfect weights)
     lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=3, gamma=0.1)
 
-    num_epochs = 5 # 5 Epochs is usually enough to teach the pre-trained ResNet-50 head
+    num_epochs = 30 # 30 Epochs for extended training to reduce false positives
 
     print("--- 🚀 Starting Custom Faster R-CNN Transfer Learning ---")
     

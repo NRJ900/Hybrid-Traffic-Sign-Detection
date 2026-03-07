@@ -91,11 +91,23 @@ if not exist "venv\Scripts\activate.bat" (
 
 call venv\Scripts\activate.bat
 
+echo Which version of YOLO would you like to run?
+echo.
+echo [1] YOLOv5 (Old Model)
+echo [2] YOLOv8 (New Model)
+echo.
+set /p yolo_choice="Enter your choice (1 or 2): "
+
+echo.
 echo The UI will automatically pop up in your default web browser!
 echo (Keep this black window open while using the app)
 echo.
 
-streamlit run Codes/app_hybrid.py --server.port 8502
+if "%yolo_choice%"=="2" (
+    streamlit run Codes/app_hybrid_v8.py --server.port 8502
+) else (
+    streamlit run Codes/app_hybrid.py --server.port 8502
+)
 
 pause
 goto MENU

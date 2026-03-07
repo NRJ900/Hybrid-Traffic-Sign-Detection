@@ -12,29 +12,33 @@ from pathlib import Path
 import sys
 import av
 from streamlit_webrtc import webrtc_streamer, RTCConfiguration
+import glob
+
+# Try to import Ultralytics
+try:
+    from ultralytics import YOLO
+except ImportError:
+    st.error("Ultralytics package not found. Please run: pip install ultralytics")
+    st.stop()
 
 sys.path.append(str(Path(__file__).parent))
 
-from models.experimental import attempt_load
-from utils.datasets import letterbox
-from utils.general import non_max_suppression, scale_coords, set_logging
-from utils.plots import plot_one_box
+# Remove yolo v5 custom imports, but keep device selection if needed
 from utils.torch_utils import select_device
+from utils.general import set_logging
 
-st.set_page_config(page_title="Hybrid Traffic Sign Detection", page_icon="🚥", layout="wide")
+st.set_page_config(page_title="Hybrid YOLOv8 Traffic Sign Detection", page_icon="🚥", layout="wide")
 
 @st.cache_resource
-def load_models(yolo_weights, device_str):
+def load_models(yolo_weights_path, device_str):
     set_logging()
     
-    # Custom YOLO loader mechanics bypassing PyTorch Hub
+    # 1. Load YOLOv8 using Ultralytics
+    yolo_model = YOLO(yolo_weights_path)
+    yolo_names = yolo_model.names
+    
     device = select_device(device_str)
-    yolo_model = attempt_load(yolo_weights, map_location=device)
     yolo_half = device.type != 'cpu'
-    if yolo_half:
-        yolo_model.half()
-        
-    yolo_names = yolo_model.module.names if hasattr(yolo_model, 'module') else yolo_model.names
 
     # 2. Custom Faster R-CNN Transfer Learned Model
     num_classes = 5 # 4 signs + 1 background
@@ -43,7 +47,8 @@ def load_models(yolo_weights, device_str):
     rcnn_model.roi_heads.box_predictor = FastRCNNPredictor(in_features, num_classes)
     
     rcnn_weights_path = Path(__file__).parent.parent / "Model" / "weights" / "best_rcnn.pth"
-    rcnn_model.load_state_dict(torch.load(rcnn_weights_path, map_location=device))
+    if rcnn_weights_path.exists():
+        rcnn_model.load_state_dict(torch.load(str(rcnn_weights_path), map_location=device))
     
     if device_str != "cpu":
         rcnn_model = rcnn_model.cuda()
@@ -59,29 +64,16 @@ def load_models(yolo_weights, device_str):
     return yolo_model, yolo_names, device, yolo_half, rcnn_model, vit_model, extractor
 
 def process_hybrid_frame(img_bgr, yolo_model, yolo_names, device, half, rcnn, vit, extractor, conf_thresh, show_yolo, show_rcnn, show_vit, show_master):
-    # Prepare YOLO tensor
-    imgsz = 640
-    img = letterbox(img_bgr, new_shape=imgsz)[0]
-    img = img[:, :, ::-1].transpose(2, 0, 1)
-    img = np.ascontiguousarray(img)
-    img_t = torch.from_numpy(img).to(device)
-    img_t = img_t.half() if half else img_t.float()
-    img_t /= 255.0
-    if img_t.ndimension() == 3:
-        img_t = img_t.unsqueeze(0)
-
-    # 1. YOLO Inference
-    pred = yolo_model(img_t, augment=False)[0]
-    pred = non_max_suppression(pred, conf_thresh, 0.45, classes=None, agnostic=False)
-
+    # 1. YOLOv8 Inference (Ultralytics handles preprocessing automatically)
+    results = yolo_model(img_bgr, verbose=False, conf=conf_thresh)[0]
+    
     yolo_bboxes = []
-    im0_shape = img_bgr.shape
-    for i, det in enumerate(pred):
-        if len(det):
-            det[:, :4] = scale_coords(img_t.shape[2:], det[:, :4], im0_shape).round()
-            for *xyxy, conf, cls in reversed(det):
-                xmin, ymin, xmax, ymax = map(int, xyxy)
-                yolo_bboxes.append((xmin, ymin, xmax, ymax, conf.item(), yolo_names[int(cls)]))
+    for box in results.boxes:
+        conf = float(box.conf[0])
+        if conf > conf_thresh:
+            x1, y1, x2, y2 = map(int, box.xyxy[0])
+            cls = int(box.cls[0])
+            yolo_bboxes.append((x1, y1, x2, y2, conf, yolo_names[cls]))
 
     # 2. Custom Faster R-CNN Inference
     img_rgb = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB)
@@ -153,7 +145,7 @@ def process_hybrid_frame(img_bgr, yolo_model, yolo_names, device, half, rcnn, vi
     if show_yolo:
         for b in yolo_bboxes:
             cv2.rectangle(final_img, (b[0], b[1]), (b[2], b[3]), (0, 255, 0), 2)
-            cv2.putText(final_img, f"YOLO: {b[4]:.2f}", (b[0], b[1]-5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+            cv2.putText(final_img, f"YOLOv8: {b[4]:.2f}", (b[0], b[1]-5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
     if show_rcnn:
         for b in rcnn_bboxes:
             cv2.rectangle(final_img, (b[0], b[1]), (b[2], b[3]), (255, 0, 0), 2)
@@ -169,20 +161,22 @@ def process_hybrid_frame(img_bgr, yolo_model, yolo_names, device, half, rcnn, vi
 
 # --- Core Streamlit UI ---
 
-st.title("🚥 Hybrid Master Evaluator: Adaptive Fusion Intelligence Framework")
-st.markdown("This application runs **Three Parallel Neural Networks** (YOLOv5, Faster R-CNN, ViT) and dynamically arbitrates collisions.")
+st.title("🚥 Hybrid Master Evaluator: Adaptive Fusion Intelligence Framework (YOLOv8)")
+st.markdown("This application runs **Three Parallel Neural Networks** (YOLOv8, Faster R-CNN, ViT) and dynamically arbitrates collisions.")
 
 st.sidebar.header("⚙️ Settings")
-# Dynamically find available YOLO weights in Model/weights/ (excluding V8 and RCNN files)
+
+# Dynamically find available YOLO weights in Model/weights/ (.pt files excluding RCNN pth)
 weights_dir = Path(__file__).parent.parent / "Model" / "weights"
-available_weights = [f.name for f in weights_dir.iterdir() if f.suffix == '.pt' and 'v8' not in f.name and 'rcnn' not in f.name]
+available_weights = [f.name for f in weights_dir.glob("*v8.pt")]
 
 if not available_weights:
-    st.sidebar.error(f"No YOLOv5 .pt weights found in {weights_dir}")
+    st.sidebar.error(f"No YOLO .pt weights found in {weights_dir}")
     st.stop()
 
-selected_weight = st.sidebar.selectbox("Select YOLOv5 Weights Model", available_weights, index=0)
-weights = str(weights_dir / selected_weight)
+selected_weight = st.sidebar.selectbox("Select YOLO Weights Model", available_weights, index=0)
+weights_path = str(weights_dir / selected_weight)
+
 device_str = st.sidebar.selectbox("Device", ("0", "cpu") if torch.cuda.is_available() else ("cpu",))
 source_type = st.sidebar.radio("Select Input Source", ("Image", "Video", "Live Webcam"))
 
@@ -190,7 +184,7 @@ st.sidebar.markdown("---")
 st.sidebar.markdown("### Neural Architectures 🧠")
 st.sidebar.markdown("*Tip: Unchecking heavy models restores the stream to fast YOLO real-time speed. Checking them activates slow multi-model inference for maximum accuracy.*")
 show_master = st.sidebar.checkbox("Show Final Master Fusion Bounds (Red)", value=True, help="Draws the final intelligently-merged box. If you turn off all 3 AIs above, but leave this on, it will still draw the default YOLO boxes because YOLO acts as the default Master.")
-show_yolo = st.sidebar.checkbox("Compute custom YOLOv5 (Green)", value=True)
+show_yolo = st.sidebar.checkbox("Compute custom YOLOv8 (Green)", value=True)
 show_rcnn = st.sidebar.checkbox("Compute custom Faster R-CNN (Blue)", value=False, help="Replaces the generic Zero-Shot model with our newly trained native PyTorch Faster R-CNN Transfer Learned model.")
 show_vit = st.sidebar.checkbox("Compute Vision Transformer (ViT)", value=False, help="Extracts cropped proposals and passes into ViT for Semantic Verification probability multipliers.")
 
@@ -200,8 +194,8 @@ st.sidebar.markdown("### Performance ⚡")
 frame_skip = st.sidebar.slider("Video Frame Skip (Interpolation)", 1, 15, 5, help="When parsing Videos or Webcams, only process 1 out of every N frames through the heavy AI models to maintain real-time speeds. The bounding boxes will graphically persist on the skipped frames.")
 
 try:
-    with st.spinner("Downloading and caching massive architectures internally... (YOLO, R-CNN, ViT)"):
-        yolo_m, yolo_n, yolo_device, yolo_half, rcnn_m, vit_m, vit_ext = load_models(weights, device_str)
+    with st.spinner(f"Loading '{selected_weight}' and massive architectures internally... (YOLOv8, R-CNN, ViT)"):
+        yolo_m, yolo_n, yolo_device, yolo_half, rcnn_m, vit_m, vit_ext = load_models(weights_path, device_str)
     st.sidebar.success("All 3 AIs Active and Locked.")
 except Exception as e:
     st.sidebar.error(f"Framework Error Loader: {e}")
@@ -216,7 +210,7 @@ if source_type == "Image":
         img_bgr = cv2.imdecode(file_bytes, 1)
         
         if st.button("Run Adaptive Verification Fusion", type="primary"):
-            with st.spinner("Pipeline Processing... Synthesizing YOLO + RCNN + ViT"):
+            with st.spinner("Pipeline Processing... Synthesizing YOLOv8 + RCNN + ViT"):
                 t1 = time.time()
                 fused_out = process_hybrid_frame(img_bgr, yolo_m, yolo_n, yolo_device, yolo_half, rcnn_m, vit_m, vit_ext, conf_thres, show_yolo, show_rcnn, show_vit, show_master)
                 t2 = time.time()
