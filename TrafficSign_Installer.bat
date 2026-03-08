@@ -100,7 +100,7 @@ set /p yolo_choice="Enter your choice (1 or 2): "
 
 echo.
 echo The UI will automatically pop up in your default web browser!
-echo (Keep this black window open while using the app)
+echo (Keep this window open while using the app)
 echo.
 
 if "%yolo_choice%"=="2" (
