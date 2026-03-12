@@ -9,15 +9,17 @@ echo ========================================================
 echo.
 echo Please select an option:
 echo.
-echo [1] Install Project (Download Repo ^& Install Requirements)
-echo [2] Start Application (Launch Streamlit Server)
-echo [3] Exit
+echo [1] Install Project (Clone Repo ^& Setup Environment)
+echo [2] Setup Environment (Use Current Folder)
+echo [3] Start Application (Launch Streamlit Server)
+echo [4] Exit
 echo.
-set /p choice="Enter your choice (1, 2, or 3): "
+set /p choice="Enter your choice (1, 2, 3, or 4): "
 
 if "%choice%"=="1" goto INSTALL
-if "%choice%"=="2" goto RUN
-if "%choice%"=="3" goto EOF
+if "%choice%"=="2" goto SETUP_LOCAL
+if "%choice%"=="3" goto RUN
+if "%choice%"=="4" goto EOF
 goto MENU
 
 :INSTALL
@@ -69,6 +71,44 @@ echo.
 echo Installation Complete!
 pause
 cd ..
+goto MENU
+
+:SETUP_LOCAL
+cls
+echo ========================================================
+echo [STEP 1.5] Setting up Virtual Environment Locally...
+echo ========================================================
+echo.
+
+if not exist "venv\Scripts\activate.bat" (
+    echo Creating Python Virtual Environment...
+    python -m venv venv
+    if errorlevel 1 (
+        echo ERROR: Failed to create virtual environment. Ensure Python is installed and in your PATH.
+        pause
+        goto MENU
+    )
+    
+    echo Activating environment...
+    call venv\Scripts\activate.bat
+    
+    if exist "requirements.txt" (
+        echo Installing Dependencies ^(This might take a few minutes^)...
+        pip install -r requirements.txt
+    ) else (
+        echo ERROR: requirements.txt not found in current directory.
+    )
+) else (
+    echo Virtual Environment already exists. Checking for updates...
+    call venv\Scripts\activate.bat
+    if exist "requirements.txt" (
+        pip install -r requirements.txt
+    )
+)
+
+echo.
+echo Setup Complete!
+pause
 goto MENU
 
 :RUN

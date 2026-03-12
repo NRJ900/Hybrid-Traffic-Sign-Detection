@@ -32,5 +32,7 @@ The framework supports native transfer learning if you wish to custom train the 
 2. Run `python train_rcnn.py` to initiate the PyTorch transfer learning loop.
 3. The script will automatically save your new custom weights to `Model/weights/best_rcnn.pth` for immediate use in the hybrid app.
 
+Note:
+  Install Models and extract it into the project folder : https://drive.google.com/file/d/1ByZSaihm0UGUfBqIBdywLw5-IH9zjxc1/view?usp=drive_link
 ---
-*Architected and Designed by NRJ900.*
+
