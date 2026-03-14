@@ -7,7 +7,7 @@
 This project implements a novel **Adaptive Fusion Intelligence Framework** that runs multiple Deep Learning models in parallel to aggressively eliminate false positives and ensure extreme accuracy in detections.
 
 The pipeline consists of three core AI stages:
-1. **The Fast Scanner (YOLOv5):** A highly optimized, custom-trained YOLOv5 backbone performs initial high-speed sweeps across the video frame, locking onto immediate region proposals.
+1. **The Fast Scanner (YOLOv5 / YOLOv12):** A highly optimized, custom-trained YOLOv5 backbone performs initial high-speed sweeps across the video frame, locking onto immediate region proposals.
 2. **The Detail Verifier (Faster R-CNN):** A custom-trained native PyTorch Faster R-CNN model running a deep ResNet-50 backbone. This two-stage detector independently evaluates the frame, providing precise secondary cross-verification.
 3. **The Semantic Judge (Vision Transformer/ViT):** Generated bounding boxes from the earlier stages are cropped and passed into a Vision Transformer for final semantic verification, calculating a weighted confidence multiplier.
 
